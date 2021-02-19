@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.http import Http404
 from django.template import loader
@@ -15,14 +16,20 @@ import logging
 logger = logging.getLogger('polls')
 
 
-def index(request):
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('login'))
+def find_answer_for_question(user, question):
+    try:
+        answer = Answer.objects.get(user=user, question=question)
+        return answer.choice
+    except Answer.DoesNotExist:
+        logger.warning("cannot find answer for user " + str(user) + " question " + str(question) + ". Return 0")
+        return 0
 
-    questions = list(Question.objects.all())
-    answers = list(Answer.objects.filter(user=request.user))
 
-    # find the first question not answered
+def get_first_unanswered_question_index(user, questions):
+    """Returns the index of the first non answered question, or
+    -1 if has answered everything"""
+
+    answers = list(Answer.objects.filter(user=user))
     min_non_answered_index = 0
     for q in questions:
         responded = False
@@ -32,13 +39,50 @@ def index(request):
                 break
 
         if not responded:
-            break
+            return min_non_answered_index
 
         min_non_answered_index += 1
 
+    return -1
+
+
+def index(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('login'))
+
+    questions = list(Question.objects.all())
+    unanswered = get_first_unanswered_question_index(request.user, questions)
+    matches = []
+    users = list(User.objects.all())
+    has_completed_poll = unanswered == -1
+    results = []
+
+    if has_completed_poll:
+        # compare with every user that finished the poll
+        for u in users:
+            if get_first_unanswered_question_index(u, questions) != -1:
+                continue  # skip users that have not answered everything.
+
+            score = 0.0
+            max_score = len(questions)
+            for q in questions:
+                my_answer = find_answer_for_question(request.user, q)
+                u_answer = find_answer_for_question(u, q)
+                if my_answer == u_answer:
+                    score += 1.0
+
+            score = score / max_score * 100.0  # convert score to percent
+            results.append({'user': u, 'score': score})
+
+    def take_score(entry):
+        return entry['score']
+
+    results.sort(key=take_score)
+
     context = {
-        'latest_question_index': min_non_answered_index,
-        'has_completed_poll': min_non_answered_index == len(questions)
+        'latest_question_index': unanswered,
+        'has_completed_poll': has_completed_poll,
+        'matches': results
     }
     return render(request, 'polls/index.html', context)
 

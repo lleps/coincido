@@ -11,7 +11,12 @@
     <form action="{% url 'polls:vote' question_index %}" method="post">
     {% csrf_token %}
     {% for choice in question.choice_set.all %}
-        <input type="radio" name="choice" id="choice{{ forloop.counter0 }}" value="{{ forloop.counter0 }}">
+        <input
+                type="radio"
+                name="choice"
+                id="choice{{ forloop.counter0 }}" value="{{ forloop.counter0 }}"
+                {% if forloop.counter0 == answer_index %} checked {% endif %}
+        >
         <label for="choice{{ forloop.counter0 }}">{{ choice.choice_text }}</label><br>
     {% endfor %}
     <input type="submit" value="Vote">
