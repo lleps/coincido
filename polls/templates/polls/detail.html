@@ -7,8 +7,8 @@
 
     <p>vote: {{ has_answer }}</p>
     <p>answer_index: {{ answer_index }}</p>
-    <p>question_index: {{ answer_index }}</p>
-    <form action="{% url 'polls:vote' question.id %}" method="post">
+    <p>question_index: {{ question_index }} / {{ question_max }}</p>
+    <form action="{% url 'polls:vote' question_index %}" method="post">
     {% csrf_token %}
     {% for choice in question.choice_set.all %}
         <input type="radio" name="choice" id="choice{{ forloop.counter0 }}" value="{{ forloop.counter0 }}">

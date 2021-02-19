@@ -1,22 +1,20 @@
 {% extends 'polls/base.html' %}
 
 {% block content %}
-{% if user.is_authenticated %}
-  Hi {{ user.username }}!
-  <p><a href="{% url 'logout' %}">Log Out</a></p>
-{% else %}
-  <p>You are not logged in</p>
-  <a href="{% url 'login' %}">Log In</a>
-  <a href="{% url 'polls:signup' %}">Sign up</a>
-{% endif %}
+    {% if user.is_authenticated %}
+      Hi {{ user.username }}!
+      <p><a href="{% url 'logout' %}">Log Out</a></p>
 
- {% if latest_question_list %}
-        <ul>
-        {% for question in latest_question_list %}
-            <li><a href="/{{ question.id }}/">{{ question.question_text }}</a></li>
-        {% endfor %}
-        </ul>
+        {% if not has_completed_poll %}
+        <li><a href="/{{ latest_question_index }}/">Completar la encuesta</a>
+        {% else %}
+        <p>Has completado la encuesta.</p>
+        {% endif %}
+
     {% else %}
-        <p>No polls are available.</p>
+      <p>You are not logged in</p>
+      <a href="{% url 'login' %}">Log In</a>
+      <a href="{% url 'polls:signup' %}">Sign up</a>
     {% endif %}
+
 {% endblock %}

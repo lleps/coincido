@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.http import Http404
 from django.template import loader
 from django.shortcuts import get_object_or_404, render, redirect
@@ -15,17 +15,31 @@ import logging
 logger = logging.getLogger('polls')
 
 
-class DetailView(generic.DetailView):
-    model = Question
-    template_name = 'polls/detail.html'
-
-
 def index(request):
-    # ok. entonces aca tengo que:
-    # has_completed_poll: booleano si ya completo todas las polls.
-    # last_poll_index: indice de poll que tiene que contestar
-    latest_question_list = Question.objects.order_by('-pub_date')[:5]
-    context = {'latest_question_list': latest_question_list}
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('login'))
+
+    questions = list(Question.objects.all())
+    answers = list(Answer.objects.filter(user=request.user))
+
+    # find the first question not answered
+    min_non_answered_index = 0
+    for q in questions:
+        responded = False
+        for a in answers:
+            if a.question.id == q.id:
+                responded = True
+                break
+
+        if not responded:
+            break
+
+        min_non_answered_index += 1
+
+    context = {
+        'latest_question_index': min_non_answered_index,
+        'has_completed_poll': min_non_answered_index == len(questions)
+    }
     return render(request, 'polls/index.html', context)
 
 
@@ -36,7 +50,12 @@ class SignUpView(generic.CreateView):
 
 
 def detail(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
+    questions = list(Question.objects.all())
+    if question_id < 0 or question_id >= len(questions):
+        raise Http404("invalid question index: " + str(question_id))
+
+    question = questions[question_id]
+
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('login'))
 
@@ -44,7 +63,8 @@ def detail(request, question_id):
         'question': question,
         'has_answer': False,
         'answer_index': 0,
-        'question_index': Question.objects.all().count()
+        'question_index': question_id,
+        'question_max': len(questions)
     }
 
     try:
@@ -64,13 +84,18 @@ def results(request, question_id):
 
 
 def vote(request, question_id):
+    questions = list(Question.objects.all())
+    if question_id < 0 or question_id >= len(questions):
+        return Http404("invalid question index: " + question_id)
+
+    question = questions[question_id]
+
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('login'))
 
-    question = get_object_or_404(Question, pk=question_id)
     try:
         selected_choice = request.POST['choice']
-    except (KeyError, Choice.DoesNotExist):
+    except KeyError:
         # Redisplay the question voting form.
         # TODO display with all the metadata
         return render(request, 'polls/detail.html', {
@@ -91,7 +116,7 @@ def vote(request, question_id):
                     " question " + question.question_text +
                     " choice: " + selected_choice)
 
-        # Always return an HttpResponseRedirect after successfully dealing
-        # with POST data. This prevents data from being posted twice if a
-        # user hits the Back button.
-        return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+        if question_id + 1 < len(questions):  # redirect to next question
+            return HttpResponseRedirect(reverse('polls:detail', args=(question_id + 1,)))
+        else:  # no more questions, redirect to home
+            return HttpResponseRedirect(reverse('polls:index'))
