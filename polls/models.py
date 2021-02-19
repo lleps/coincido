@@ -27,3 +27,14 @@ class Answer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice = models.IntegerField(default=0)  # choice picked in the answer
+
+
+class Profile(models.Model):
+    GENDER_CHOICES = [
+        ('M', 'Hombre'),
+        ('F', 'Mujer'),
+    ]
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default='M',)
+    gender_preference = models.CharField(max_length=1, choices=GENDER_CHOICES, default='F',)

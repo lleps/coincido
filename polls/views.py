@@ -9,7 +9,7 @@ from django.urls import reverse, reverse_lazy
 from django.views import generic
 from django.contrib.auth.views import LoginView
 
-from .models import Question, Choice, Answer
+from .models import Question, Choice, Answer, Profile
 
 import logging
 
@@ -46,9 +46,26 @@ def get_first_unanswered_question_index(user, questions):
     return -1
 
 
+def gender_preferences_match(user1, user2):
+    try:
+        profile1 = user1.profile
+        profile2 = user2.profile
+        return profile1.gender == profile2.gender_preference and profile2.gender == profile1.gender_preference
+    except:
+        return False
+
+
+
 def index(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('login'))
+
+    # if user has no profile, redirect to the profile to create one
+    try:
+        request.user.profile
+    except:
+        return HttpResponseRedirect(reverse('polls:profile'))
+
 
     questions = list(Question.objects.all())
     unanswered = get_first_unanswered_question_index(request.user, questions)
@@ -62,6 +79,9 @@ def index(request):
         for u in users:
             if get_first_unanswered_question_index(u, questions) != -1:
                 continue  # skip users that have not answered everything.
+
+            if not gender_preferences_match(u, request.user):
+                continue
 
             score = 0.0
             max_score = len(questions)
@@ -94,14 +114,17 @@ class SignUpView(generic.CreateView):
 
 
 def detail(request, question_id):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('login'))
+
+
     questions = list(Question.objects.all())
     if question_id < 0 or question_id >= len(questions):
         raise Http404("invalid question index: " + str(question_id))
 
     question = questions[question_id]
 
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('login'))
+
 
     context = {
         'question': question,
@@ -164,3 +187,38 @@ def vote(request, question_id):
             return HttpResponseRedirect(reverse('polls:detail', args=(question_id + 1,)))
         else:  # no more questions, redirect to home
             return HttpResponseRedirect(reverse('polls:index'))
+
+
+def profile(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('login'))
+
+    if request.method == "GET":
+        context = {'gender': 'M', 'gender_preference': 'F'}
+        try:
+            p = request.user.profile
+            context['gender'] = p.gender
+            context['gender_preference'] = p.gender_preference
+        except:  # ignore, set to defaults
+            pass
+
+        logger.info("context is " + str(context))
+        return render(request, 'polls/profile.html', context)
+    elif request.method == "POST":
+
+        # make the profile for this user
+        try:
+            profile = Profile.objects.get(user=request.user)
+
+        except Profile.DoesNotExist:
+            profile = Profile.objects.create(user=request.user)
+
+
+        profile.gender = request.POST['gender']
+        profile.gender_preference = request.POST['gender_preference']
+        profile.save()
+
+        logger.warning("g")
+
+        return HttpResponseRedirect(reverse('polls:index'))
+
