@@ -4,19 +4,24 @@
 
 {% block content %}
     {% if user.is_authenticated %}
-      Hi {{ user.username }}!
-      <p><a href="{% url 'logout' %}">Log Out</a></p>
+      Bienvenido, {{ user.username }}.
 
         {% if not has_completed_poll %}
-        <li><a href="/{{ latest_question_index }}/">Completar la encuesta</a>
+            Queremos saber más de ti. Completa el formulario para encontrar a tu persona ideal.
+
+            <br>
+            <br>
+            <a href="/{{ latest_question_index }}/" class="btn btn-primary">
+                Completar la encuesta
+            </a>
+
         {% else %}
-        <p>Has completado la encuesta.</p>
+        <p>Ya completaste la encuesta. Los mejores candidatos son:</p>
         <ul>
             {% for match in matches %}
-                <li>{{ match.score }}% - {{ match.user.username }}</li>
+                <li>{{ match.user.username }} - {{ match.score }}%</li>
             {% endfor %}
         </ul>
-
         {% endif %}
 
     {% else %}

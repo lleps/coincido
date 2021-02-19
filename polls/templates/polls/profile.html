@@ -4,12 +4,12 @@
 
 
 {% block content %}
-    <h1>Elige lo que eres y lo que buscas</h1>
+    <h3>Elige lo que eres y lo que buscas</h3>
 
     <form action="{% url 'polls:profile' %}" method="post">
         {% csrf_token %}
 
-        <h4>Soy</h4>
+        <h4>Soy:</h4>
         <div>
              <input type="radio"
                name="gender" value="M"
@@ -21,18 +21,18 @@
             <label for="gender_choice2">Mujer</label><br>
         </div>
 
-        <h4>Busco</h4>
+        <h4>Busco:</h4>
         <div>
              <input type="radio"
                name="gender_preference" value="M"
                id="gender_preference_choice1" {% if gender_preference == 'M' %} checked {% endif %}>
-            <label for="gender_choice1">Hombre</label><br>
+            <label for="gender_preference_choice1">Hombre</label><br>
             <input type="radio"
                name="gender_preference" value="F"
                id="gender_preference_choice2" {% if gender_preference == 'F' %} checked {% endif %}>
-            <label for="gender_choice2">Mujer</label><br>
+            <label for="gender_preference_choice2">Mujer</label><br>
         </div>
 
-        <button type="submit">Guardar</button>
+        <button type="submit" class="btn btn-primary">Guardar</button>
     </form>
 {% endblock %}

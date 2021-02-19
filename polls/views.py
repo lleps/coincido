@@ -131,7 +131,8 @@ def detail(request, question_id):
         'has_answer': False,
         'answer_index': 0,
         'question_index': question_id,
-        'question_max': len(questions)
+        'question_max': len(questions),
+        'question_percent': int(question_id/len(questions) * 100)
     }
 
     try:
