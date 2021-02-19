@@ -1,0 +1,12 @@
+{% load static %}
+
+<html lang="es">
+<head>
+    <link rel="stylesheet" href="{% static 'polls/style.css' %}">
+    <title>{% block title %}My amazing site{% endblock %}</title>
+</head>
+
+<body>
+    {% block content %}{% endblock %}
+</body>
+</html>
