@@ -53,6 +53,7 @@ class AppConfig(models.Model):
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=200)
+    choice_image = models.ImageField(null=True, blank=True)
 
 
 class Answer(models.Model):

@@ -12,25 +12,39 @@
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
     <div class="container">
-    <form action="{% url 'polls:vote' question_index %}" method="post">
-    {% csrf_token %}
-    {% for choice in question.choice_set.all %}
-        <input
-                type="radio"
-                name="choice"
-                id="choice{{ forloop.counter0 }}" value="{{ forloop.counter0 }}"
-                {% if forloop.counter0 == answer_index %} checked {% endif %}
-        >
-        <label for="choice{{ forloop.counter0 }}">{{ choice.choice_text }}</label><br>
-    {% endfor %}
+        <form action="{% url 'polls:vote' question_index %}" method="post">
+            {% csrf_token %}
+            {% for choice in question.choice_set.all %}
+                {% if choice.choice_image %}
+                    <label>
+                        <input class="imgradio" type="radio" name="choice" value="{{ forloop.counter0 }}"
+                                {% if forloop.counter0 == answer_index %} checked {% endif %}
+                        >
+                        <img width="30%" src="{{ choice.choice_image.url }}">
+                    </label>
+                {% else %}
+                    <label class="rad">
+                        <input
+                            type="radio"
+                            name="choice"
+                            id="choice{{ forloop.counter0 }}" value="{{ forloop.counter0 }}"
+                            {% if forloop.counter0 == answer_index %} checked {% endif %}
+                        >
+                        <i></i> {{ choice.choice_text }}
+                    </label>
+                    <br>
+                {% endif %}
+            {% endfor %}
+
+            <div class="row">
+                <div class="col-6"></div>
+                <div class="col-6 text-right">
+                    <input type="submit" class="btn btn-primary" value="Siguiente">
+                </div>
+            </div>
+
+        </form>
     </div>
 
-    <div class="row">
-        <div class="col-6">
-        </div>
-        <div class="col-6 text-right">
-        <input type="submit" class="btn btn-primary" value="Siguiente">
-        </div>
-    </div>
-    </form>
+
 {% endblock %}
