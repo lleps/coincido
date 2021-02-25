@@ -98,13 +98,14 @@ def index(request):
                 if my_answer == u_answer:
                     score += 1.0
 
-            score = score / max_score * 100.0  # convert score to percent
+            score = int(score / max_score * 100.0)  # convert score to percent
             results.append({'user': u, 'score': score})
 
     def take_score(entry):
         return entry['score']
 
     results.sort(key=take_score, reverse=True)
+    results = results[0:AppConfig.get().afinidad_cantidad_gente]
 
     context = {
         'latest_question_index': unanswered,

@@ -4,8 +4,6 @@
 
 {% block content %}
     {% if user.is_authenticated %}
-      Bienvenido, {{ user.username }}.
-
         {% if not has_completed_poll %}
             {{ cfg.frase_inicial }}
 
@@ -17,17 +15,24 @@
 
         {% else %}
         <p>{{ cfg.frase_mejores_candidatos }}</p>
-        <ul>
+        <ul class="list-group">
             {% for match in matches %}
-                <li>{{ match.user.username }} - {{ match.score }}%</li>
+                <li class="list-group-item">
+                    <h4># {{ forloop.counter }} - {{ match.user.username }}</h4><br>
+                    <span class="text-muted">
+                        <b>{{ match.score }}%</b> de coincidencia - Correo electrónico: <a class="text-primary">{{ match.user.email }}</a>
+                    </span>
+                    <div class="progress my-2">
+                      <div class="progress-bar bg-danger" role="progressbar" style="width: {{ match.score }}%" aria-valuenow="{{ match.score }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </li>
             {% endfor %}
         </ul>
         {% endif %}
 
     {% else %}
-      <p>You are not logged in</p>
-      <a href="{% url 'login' %}">Log In</a>
-      <a href="{% url 'polls:signup' %}">Sign up</a>
+      <a href="{% url 'login' %}">Ingresar</a>
+      <a href="{% url 'polls:signup' %}">Registrarse</a>
     {% endif %}
 
 {% endblock %}
