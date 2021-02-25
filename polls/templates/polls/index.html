@@ -4,31 +4,38 @@
 
 {% block content %}
     {% if user.is_authenticated %}
-        {% if not has_completed_poll %}
-            {{ cfg.frase_inicial }}
+        <div class="row">
+            <div class="col-md-6">
+                <img class="w-100" src="{{ cfg.imagen_principal.url }}" alt="Imágen principal">
+            </div>
+            <div class="col-md-6 d-flex flex-column">
+                {% if not has_completed_poll %}
+                    {{ cfg.frase_inicial }}
+                    <br>
+                    <br>
+                    <a href="/{{ latest_question_index }}/" class="btn btn-primary btn-block mt-auto w-100">
+                        Completar la encuesta
+                    </a>
 
-            <br>
-            <br>
-            <a href="/{{ latest_question_index }}/" class="btn btn-primary">
-                Completar la encuesta
-            </a>
+                {% else %}
+                <p>{{ cfg.frase_mejores_candidatos }}</p>
+                <ul class="list-group">
+                    {% for match in matches %}
+                        <li class="list-group-item">
+                            <h4># {{ forloop.counter }} - {{ match.user.username }}</h4><br>
+                            <span class="text-muted">
+                                <b>{{ match.score }}%</b> de coincidencia - Correo electrónico: <a class="text-primary">{{ match.user.email }}</a>
+                            </span>
+                            <div class="progress my-2">
+                              <div class="progress-bar bg-danger" role="progressbar" style="width: {{ match.score }}%" aria-valuenow="{{ match.score }}" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
 
-        {% else %}
-        <p>{{ cfg.frase_mejores_candidatos }}</p>
-        <ul class="list-group">
-            {% for match in matches %}
-                <li class="list-group-item">
-                    <h4># {{ forloop.counter }} - {{ match.user.username }}</h4><br>
-                    <span class="text-muted">
-                        <b>{{ match.score }}%</b> de coincidencia - Correo electrónico: <a class="text-primary">{{ match.user.email }}</a>
-                    </span>
-                    <div class="progress my-2">
-                      <div class="progress-bar bg-danger" role="progressbar" style="width: {{ match.score }}%" aria-valuenow="{{ match.score }}" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                </li>
-            {% endfor %}
-        </ul>
-        {% endif %}
 
     {% else %}
       <a href="{% url 'login' %}">Ingresar</a>
