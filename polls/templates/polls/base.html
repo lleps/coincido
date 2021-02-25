@@ -5,14 +5,16 @@
     <link rel="stylesheet" href="{% static 'polls/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'polls/style.css' %}">
     <title>{% block title %}Coincido{% endblock %}</title>
-
 </head>
 
-<body>
+<body class="h-100 w-100" style="background: url('{{ cfg.imagen_fondo.url }}'); background-size: cover; height: 100%">
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary" style="background-color: {{ cfg.color_principal }} !important;">
     <div class="container">
-        <a class="navbar-brand" href="/">Coincido.com.ar</a>
+        <a class="navbar-brand" href="/">
+            <img src="{{ cfg.imagen_logo.url }}" width="30" height="30" alt="">
+            {{ cfg.frase_logo }}
+        </a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -25,7 +27,7 @@
             <a class="nav-link" href="{% url 'logout' %}">Salir</a>
         </li>
       {% else %}
-        <li class="nav-item active">
+        <li class="nav-item">
             <a class="nav-link" href="/accounts/login">Ingresar</a>
         </li>
         <li class="nav-item">
@@ -37,13 +39,14 @@
     </div>
 
 </nav>
-<div class="container">
+    <div class="container" >
     <div class="card mt-3">
         <div class="card-body shadow">
             {% block content %}{% endblock %}
         </div>
     </div>
 </div>
+
 </body>
 <script src="{% static 'polls/jquery-3.5.1.slim.min.js' %}"></script>
 <script src="{% static 'polls/bootstrap.bundle.min.js' %}"></script>

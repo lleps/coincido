@@ -9,11 +9,18 @@ from django.urls import reverse, reverse_lazy
 from django.views import generic
 from django.contrib.auth.views import LoginView
 
-from .models import Question, Choice, Answer, Profile
+from .models import Question, Choice, Answer, Profile, AppConfig
 
 import logging
 
 logger = logging.getLogger('polls')
+
+
+# Context preprocessor that injects cfg to every request
+def from_email(request):
+    return {
+        "cfg": AppConfig.get(),
+    }
 
 
 def find_answer_for_question(user, question):
@@ -97,7 +104,7 @@ def index(request):
     def take_score(entry):
         return entry['score']
 
-    results.sort(key=take_score)
+    results.sort(key=take_score, reverse=True)
 
     context = {
         'latest_question_index': unanswered,
@@ -107,8 +114,14 @@ def index(request):
     return render(request, 'polls/index.html', context)
 
 
+class SignupForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ("username", "email",)
+
+
 class SignUpView(generic.CreateView):
-    form_class = UserCreationForm
+    form_class = SignupForm
     success_url = reverse_lazy('login')
     template_name = 'registration/signup.html'
 
@@ -123,8 +136,6 @@ def detail(request, question_id):
         raise Http404("invalid question index: " + str(question_id))
 
     question = questions[question_id]
-
-
 
     context = {
         'question': question,
@@ -195,7 +206,10 @@ def profile(request):
         return HttpResponseRedirect(reverse('login'))
 
     if request.method == "GET":
-        context = {'gender': 'M', 'gender_preference': 'F'}
+        context = {
+            'gender': 'M',
+            'gender_preference': 'F'
+        }
         try:
             p = request.user.profile
             context['gender'] = p.gender

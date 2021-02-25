@@ -1,13 +1,24 @@
 <!-- templates/registration/signup.html -->
 {% extends 'polls/base.html' %}
 
+{% load bootstrap5 %}
+
 {% block title %}Registrarse{% endblock %}
 
 {% block content %}
-  <h2>Registrarse</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Registrarse</button>
-  </form>
+<form method="post" class="form">
+<div class="row">
+    <div class="col-md-6">
+        <img class="w-100" src="{{ cfg.imagen_principal.url }}" alt="Imágen principal">
+    </div>
+    <div class="col-md-6">
+        <h2 class="mb-4 text-center w-100 text-uppercase font-weight-bold">Registrarse</h2>
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        {% buttons %}
+            <button type="submit" class="btn btn-primary btn-block">Registrarse</button>
+        {% endbuttons %}
+    </div>
+</div>
+</form>
 {% endblock %}

@@ -7,7 +7,7 @@
       Bienvenido, {{ user.username }}.
 
         {% if not has_completed_poll %}
-            Queremos saber más de ti. Completa el formulario para encontrar a tu persona ideal.
+            {{ cfg.frase_inicial }}
 
             <br>
             <br>
@@ -16,7 +16,7 @@
             </a>
 
         {% else %}
-        <p>Ya completaste la encuesta. Los mejores candidatos son:</p>
+        <p>{{ cfg.frase_mejores_candidatos }}</p>
         <ul>
             {% for match in matches %}
                 <li>{{ match.user.username }} - {{ match.score }}%</li>

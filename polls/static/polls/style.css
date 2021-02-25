@@ -1,0 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Saira+Semi+Condensed:wght@400;600&display=swap');
+
+body {
+    font-family: "Saira Semi Condensed",
+    sans-serif;
+}
+
+label { /* make form labels bold */
+    font-weight: bold;
+}
