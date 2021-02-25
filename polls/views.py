@@ -67,11 +67,13 @@ def index(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('login'))
 
-    # if user has no profile, redirect to the profile to create one
-    try:
-        request.user.profile
-    except:
-        return HttpResponseRedirect(reverse('polls:profile'))
+    # if user has no profile, AND we require gender, redirect to the profile to create one
+    pedir_genero = AppConfig.get().pedir_genero
+    if pedir_genero:
+        try:
+            request.user.profile
+        except:
+            return HttpResponseRedirect(reverse('polls:profile'))
 
 
     questions = list(Question.objects.all())
@@ -84,10 +86,14 @@ def index(request):
     if has_completed_poll:
         # compare with every user that finished the poll
         for u in users:
+            if u == request.user:
+                continue  # skip, will always match 100% myself
+
             if get_first_unanswered_question_index(u, questions) != -1:
                 continue  # skip users that have not answered everything.
 
-            if not gender_preferences_match(u, request.user):
+            # if gender filter is on, require to be the gender we're asking
+            if pedir_genero and (not gender_preferences_match(u, request.user)):
                 continue
 
             score = 0.0

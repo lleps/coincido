@@ -41,6 +41,8 @@ class AppConfig(models.Model):
 
     imagen_principal = models.ImageField(help_text="Imagen principal, mostrada en login, registro y menu", default="")
 
+    pedir_genero = models.BooleanField(help_text="Solo matchear gente del género que buscan", default=True)
+
     @staticmethod
     def get():
         try:
