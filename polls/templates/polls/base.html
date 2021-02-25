@@ -5,6 +5,13 @@
     <link rel="stylesheet" href="{% static 'polls/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'polls/style.css' %}">
     <title>{% block title %}Coincido{% endblock %}</title>
+
+<!-- Overwrite color variables -->
+<style>
+    :root {
+        --col-primary: {{ cfg.color_principal }};
+    }
+</style>
 </head>
 
 <body class="h-100 w-100" style="background: url('{{ cfg.imagen_fondo.url }}'); background-size: cover; height: 100%">

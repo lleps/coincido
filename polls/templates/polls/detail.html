@@ -3,26 +3,34 @@
 {% block title %}Pregunta{% endblock %}
 
 {% block content %}
-        <div class="progress">
-  <div class="progress-bar bg-success" role="progressbar" style="width: {{ question_percent }}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="progress" style="height: 10px;">
+  <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="height: 25px; width: {{ question_percent }}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
 </div>
 
-    <h2 class="mt-3">{{ question.question_text }}</h2>
+    <h2 class="my-5">{{ question.question_text }}</h2>
 
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
     <div class="container">
         <form action="{% url 'polls:vote' question_index %}" method="post">
             {% csrf_token %}
-            {% for choice in question.choice_set.all %}
-                {% if choice.choice_image %}
-                    <label>
-                        <input class="imgradio" type="radio" name="choice" value="{{ forloop.counter0 }}"
-                                {% if forloop.counter0 == answer_index %} checked {% endif %}
-                        >
-                        <img width="30%" src="{{ choice.choice_image.url }}">
-                    </label>
-                {% else %}
+
+            <!-- For image choices ... -->
+            {% if is_image %}
+                <div class="row">
+                    {% for choice in question.choice_set.all %}
+                        <div class="col-md-{{ col_size }}">
+                            <label>
+                                <input class="imgradio" type="radio" name="choice" value="{{ forloop.counter0 }}"
+                                        {% if forloop.counter0 == answer_index %} checked {% endif %}>
+                                <img width="100%" src="{{ choice.choice_image.url }}" alt="{{ choice.choice_text }}">
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
+            <!-- For radio choices -->
+            {% else %}
+                {% for choice in question.choice_set.all %}
                     <label class="rad">
                         <input
                             type="radio"
@@ -33,16 +41,20 @@
                         <i></i> {{ choice.choice_text }}
                     </label>
                     <br>
-                {% endif %}
-            {% endfor %}
+                {% endfor %}
+            {% endif %}
 
-            <div class="row">
-                <div class="col-6"></div>
+            <div class="row pt-4">
+                <div class="col-6">
+
+                </div>
                 <div class="col-6 text-right">
-                    <input type="submit" class="btn btn-primary" value="Siguiente">
+                    {% if not is_first %}
+                        <a href="/{{ prev_question_id }}" class="btn btn-secondary">Volver</a>
+                    {% endif %}
+                    <input type="submit" class="btn btn-primary" value="{% if is_last %} Terminar {% else %} Siguiente {% endif %}">
                 </div>
             </div>
-
         </form>
     </div>
 

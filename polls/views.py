@@ -137,13 +137,32 @@ def detail(request, question_id):
 
     question = questions[question_id]
 
+    col_size = 4  # bootstrap column size depending on choice count
+    choices = question.choice_set.all()
+    choice_count = len(choices)
+    if choice_count == 2:
+        col_size = 6
+    elif choice_count == 3:
+        col_size = 4
+    elif choice_count == 4:
+        col_size = 6
+    elif choice_count == 5:
+        col_size = 4
+
+    is_image = choice_count > 0 and choices[0].choice_image
+
     context = {
         'question': question,
         'has_answer': False,
         'answer_index': 0,
         'question_index': question_id,
         'question_max': len(questions),
-        'question_percent': int(question_id/len(questions) * 100)
+        'question_percent': int((question_id+1)/len(questions) * 100),
+        'is_last': question_id == len(questions) - 1,
+        'is_first': question_id == 0,
+        'prev_question_id': question_id - 1,
+        'col_size': col_size,
+        'is_image': is_image
     }
 
     try:
