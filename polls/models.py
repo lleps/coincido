@@ -27,6 +27,8 @@ class AppConfig(models.Model):
     frase_inicial = models.CharField(default="completa la encuesta", max_length=1024,
                                      help_text="Frase mostrada a las personas que todavia no completaron cuestionario")
 
+    frase_elegir_genero = models.CharField(default="completa los datos", max_length=1024, blank=True)
+
     afinidad_cantidad_gente = models.IntegerField(default=3, help_text="Cantidad de gente mostrada en afinidad")
 
     color_principal = models.CharField(default="#ff0000", max_length=10, help_text="Color de la barra")
