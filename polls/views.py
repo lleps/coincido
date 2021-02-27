@@ -121,14 +121,27 @@ def index(request):
     return render(request, 'polls/index.html', context)
 
 
-class SignupForm(UserCreationForm):
+class SignupFormWithEmail(UserCreationForm):
     class Meta:
         model = User
         fields = ("username", "email",)
 
 
+class SignupForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ("username",)
+
+
+def get_sign_up_form():
+    if AppConfig.get().pedir_email:
+        return SignupFormWithEmail
+    else:
+        return SignupForm
+
+
 class SignUpView(generic.CreateView):
-    form_class = SignupForm
+    form_class = get_sign_up_form()
     success_url = reverse_lazy('login')
     template_name = 'registration/signup.html'
 

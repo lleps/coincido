@@ -45,6 +45,8 @@ class AppConfig(models.Model):
 
     pedir_genero = models.BooleanField(help_text="Solo matchear gente del género que buscan", default=True)
 
+    pedir_email = models.BooleanField(help_text="Pedir email en el registro", default=True)
+
     @staticmethod
     def get():
         try:
