@@ -134,10 +134,13 @@ class SignupForm(UserCreationForm):
 
 
 def get_sign_up_form():
-    if AppConfig.get().pedir_email:
+    try:
+        if AppConfig.get().pedir_email:
+            return SignupFormWithEmail
+        else:
+            return SignupForm
+    except:
         return SignupFormWithEmail
-    else:
-        return SignupForm
 
 
 class SignUpView(generic.CreateView):
