@@ -5,9 +5,6 @@ from django.db.models import CASCADE
 from django.utils import timezone
 from django.contrib.auth.models import User
 
-# make email required
-User._meta.get_field('email').blank = False
-
 
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
