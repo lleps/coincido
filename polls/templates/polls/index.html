@@ -24,7 +24,8 @@
                         <li class="list-group-item">
                             <h4># {{ forloop.counter }} - {{ match.user.username }}</h4><br>
                             <span class="text-muted">
-                                <b>{{ match.score }}%</b> de coincidencia - Correo electrónico: <a class="text-primary">{{ match.user.email }}</a>
+                                <b>{{ match.score }}%</b> de coincidencia
+                                {% if cfg.pedir_email %} - Correo electrónico: <a class="text-primary">{{ match.user.email }}</a> {% endif %}
                             </span>
                             <div class="progress my-2">
                               <div class="progress-bar bg-danger" role="progressbar" style="width: {{ match.score }}%" aria-valuenow="{{ match.score }}" aria-valuemin="0" aria-valuemax="100"></div>

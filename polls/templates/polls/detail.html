@@ -20,7 +20,7 @@
                 <div class="row">
                     {% for choice in question.choice_set.all %}
                         <div class="col-md-{{ col_size }}">
-                            <label>
+                            <label>{{ choice.choice_text }}
                                 <input class="imgradio" type="radio" name="choice" value="{{ forloop.counter0 }}"
                                         {% if forloop.counter0 == answer_index %} checked {% endif %}>
                                 <img width="100%" src="{{ choice.choice_image.url }}" alt="{{ choice.choice_text }}">
