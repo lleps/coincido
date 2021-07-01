@@ -11,8 +11,8 @@ from django.contrib.auth.models import User
 class Beneficiario(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     dni = models.IntegerField(help_text="DNI del beneficiario")
-    nombre = models.CharField(max_length=40, help_text="Nombre del beneficiario")
-    apellido = models.CharField(max_length=40, help_text="Apellido del beneficiario")
+    nombre = models.CharField(max_length=80, help_text="Nombre del beneficiario")
+    apellido = models.CharField(max_length=80, help_text="Apellido del beneficiario")
 
 
 

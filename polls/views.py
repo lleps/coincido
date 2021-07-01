@@ -110,6 +110,30 @@ def index(request):
     return render(request, 'polls/index.html', context)
 
 
+def beneficiario(request):
+    if request.method == "POST":
+        # get all
+        # if validation fails, re-render view.
+        try:
+            dni = int(request.POST['dni'])
+            nombre = request.POST['nombre']
+            apellido = request.POST['apellido']
+
+            if dni < 100000 or dni > 999999999 or len(nombre) < 3 or len(apellido) < 3:
+                raise ValueError()
+
+            Beneficiario.objects.create(usuario=request.user, dni=dni, nombre=nombre, apellido=apellido)
+            return HttpResponseRedirect(reverse('polls:index'))
+
+        except (KeyError, ValueError):
+            return render(request, 'polls/beneficiario.html', {
+                'error': 'Los datos no son válidos. Verifique nombre, apellido y DNI.',
+            })
+
+    elif request.method == "GET":
+        return render(request, 'polls/beneficiario.html')
+
+
 class SignupFormWithEmail(UserCreationForm):
     class Meta:
         model = User

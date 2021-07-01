@@ -1,0 +1,32 @@
+{% extends 'polls/base.html' %}
+
+{% block title %}Pregunta{% endblock %}
+
+{% block content %}
+
+    <h2 class="my-3">Registrar un beneficiario</h2>
+
+    {% if error %}<p><strong class="text-danger">{{ error }}</strong></p>{% endif %}
+
+    <div class="container">
+        <form action="{% url 'polls:beneficiario' %}" method="post">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="inputDNI">DNI</label>
+                <input type="number" required class="form-control" id="inputDNI" aria-describedby="emailHelp" placeholder="DNI del beneficiario" name="dni">
+            </div>
+            <div class="form-group">
+                <label for="inputNombre">Nombre</label>
+                <input type="text" minlength="2" maxlength="80" required class="form-control" id="inputNombre" placeholder="Nombre del beneficiario" name="nombre">
+            </div>
+            <div class="form-group">
+                <label for="inputApellido">Apellido</label>
+                <input type="text" minlength="2" maxlength="80" required class="form-control" id="inputApellido" placeholder="Apellido del beneficiario" name="apellido">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Registrar</button>
+        </form>
+    </div>
+
+{% endblock %}
