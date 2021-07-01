@@ -27,7 +27,11 @@
                         <!-- Datos de si completó o no la encuesta -->
                         <span class="text-muted">
                             {% if match.completoEncuesta %} <span class="text-success">Encuesta completada.</span> {% endif %}
-                            {% if not match.completoEncuesta %}<button class="btn btn-success mr-3">Completar la encuesta.</button> {% endif %}
+                            {% if not match.completoEncuesta %}
+                                <a href="/{{ match.beneficiarioDNI }}/0" class="btn btn-success mr-3">
+                                    Completar la encuesta
+                                </a>
+                            {% endif %}
                         </span>
                     </li>
                 {% endfor %}

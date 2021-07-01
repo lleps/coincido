@@ -32,11 +32,11 @@ def find_answer_for_question(user, question):
         return 0
 
 
-def get_first_unanswered_question_index(user, questions):
+def get_first_unanswered_question_index(user, beneficiario, questions):
     """Returns the index of the first non answered question, or
     -1 if has answered everything"""
 
-    answers = list(Answer.objects.filter(user=user))
+    answers = list(Answer.objects.filter(user=user, beneficiario=beneficiario))
     min_non_answered_index = 0
     for q in questions:
         responded = False
@@ -77,30 +77,16 @@ def index(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('login'))
 
-    # Renderizar sólo beneficiarios registrados a mi nombre.
-    # Debo buscar un array de: { beneficiarioDNI, beneficiarioNombre, beneficiarioApellido, completoEncuestaONo }
-    # Si no es asi, llevarme
-
-    # Esta logica se debe mover abajo.
-    # Entonces: Dos cosas.
-    # - Lista de beneficiarios
-    # Boton de agregar nuevo beneficiario
-    # En la UI.
-
-    # esto moverlo abajo.
     questions = list(Question.objects.all())
-    unanswered = get_first_unanswered_question_index(request.user, questions)
-    users = list(User.objects.all())
-    has_completed_poll = unanswered == -1
-
     beneficiarios = Beneficiario.objects.filter(usuario=request.user)
     results = []  # lista de { beneficiarioDNI, beneficiarioNombre, beneficiarioApellido, completoEncuestaONo }
+
     for b in beneficiarios:
         results.append({
             'beneficiarioDNI': b.dni,
             'beneficiarioNombre': b.nombre,
             'beneficiarioApellido': b.apellido,
-            'completoEncuesta': False,
+            'completoEncuesta': get_first_unanswered_question_index(request.user, b, questions) == -1,
         })
 
     context = {
@@ -162,7 +148,9 @@ class SignUpView(generic.CreateView):
     template_name = 'registration/signup.html'
 
 
-def detail(request, question_id):
+def detail(request, dni, question_id):
+    beneficiario = get_object_or_404(Beneficiario, dni=dni)
+
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('login'))
 
@@ -188,6 +176,7 @@ def detail(request, question_id):
     is_image = choice_count > 0 and choices[0].choice_image
 
     context = {
+        'dni': dni,
         'question': question,
         'has_answer': False,
         'answer_index': 0,
@@ -202,7 +191,7 @@ def detail(request, question_id):
     }
 
     try:
-        answer = Answer.objects.get(user=request.user, question=question)
+        answer = Answer.objects.get(user=request.user, beneficiario=beneficiario, question=question)
         context['has_answer'] = True
         context['answer_index'] = answer.choice
         logger.info("found answer for such question: " + str(answer.choice))
@@ -212,12 +201,14 @@ def detail(request, question_id):
     return render(request, 'polls/detail.html', context)
 
 
-def results(request, question_id):
+def results(request, dni, question_id):
+    beneficiario = get_object_or_404(Beneficiario, dni=dni)
     question = get_object_or_404(Question, pk=question_id)
     return render(request, 'polls/results.html', {'question': question})
 
 
-def vote(request, question_id):
+def vote(request, dni, question_id):
+    beneficiario = get_object_or_404(Beneficiario, dni=dni)
     questions = list(Question.objects.all())
     if question_id < 0 or question_id >= len(questions):
         return Http404("invalid question index: " + question_id)
@@ -239,9 +230,9 @@ def vote(request, question_id):
     else:
         # Get or create an answer for such question
         try:
-            answer = Answer.objects.get(user=request.user, question=question)
+            answer = Answer.objects.get(user=request.user, beneficiario=beneficiario, question=question)
         except Answer.DoesNotExist:
-            answer = Answer.objects.create(user=request.user, question=question)
+            answer = Answer.objects.create(user=request.user, beneficiario=beneficiario, question=question)
 
         answer.choice = selected_choice
         answer.save()
@@ -251,7 +242,7 @@ def vote(request, question_id):
                     " choice: " + selected_choice)
 
         if question_id + 1 < len(questions):  # redirect to next question
-            return HttpResponseRedirect(reverse('polls:detail', args=(question_id + 1,)))
+            return HttpResponseRedirect(reverse('polls:detail', args=(dni, question_id + 1,)))
         else:  # no more questions, redirect to home
             return HttpResponseRedirect(reverse('polls:index'))
 
