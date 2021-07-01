@@ -5,38 +5,41 @@
 {% block content %}
     {% if user.is_authenticated %}
         <div class="row">
+            <!-- Imagen top -->
             <div class="col-md-6">
                 <img class="w-100" src="{{ cfg.imagen_principal.url }}" alt="Imágen principal">
             </div>
-            <div class="col-md-6 d-flex flex-column">
-                {% if not has_completed_poll %}
-                    {{ cfg.frase_inicial }}
-                    <br>
-                    <br>
-                    <a href="/{{ latest_question_index }}/" class="btn btn-primary btn-block mt-auto w-100">
-                        Completar la encuesta
-                    </a>
 
-                {% else %}
-                <p>{{ cfg.frase_mejores_candidatos }}</p>
-                <ul class="list-group">
-                    {% for match in matches %}
-                        <li class="list-group-item">
-                            <h4># {{ forloop.counter }} - {{ match.user.username }}</h4><br>
-                            <span class="text-muted">
-                                <b>{{ match.score }}%</b> de coincidencia
-                                {% if cfg.pedir_email %} - Correo electrónico: <a class="text-primary">{{ match.user.email }}</a> {% endif %}
-                            </span>
-                            <div class="progress my-2">
-                              <div class="progress-bar bg-danger" role="progressbar" style="width: {{ match.score }}%" aria-valuenow="{{ match.score }}" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                        </li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-            </div>
+
+
+
+            <!-- Ver lista de beneficiarios -->
+            <div class="col-md-6">
+                <!-- Agregar beneficiario -->
+                <div>
+                    <a href="/beneficiario/" class="btn btn-primary btn-block mt-auto w-100 my-3">
+                        Añadir beneficiario
+                    </a>
+                </div>
+
+                <ul class="list-group w-100" style="max-height: 500px;margin-bottom: 10px;overflow:scroll;">
+                {% for match in result %}
+                    <li class="list-group-item">
+                        <h5># {{ forloop.counter }}: {{ match.beneficiarioNombre }} {{ match.beneficiarioApellido }}, {{ match.beneficiarioDNI }}.</h5><br>
+
+                        <!-- Datos de si completó o no la encuesta -->
+                        <span class="text-muted">
+                            {% if match.completoEncuesta %} <span class="text-success">Encuesta completada.</span> {% endif %}
+                            {% if not match.completoEncuesta %}<button class="btn btn-success mr-3">Completar la encuesta.</button> {% endif %}
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+
         </div>
 
+
+        </div>
 
     {% else %}
       <a href="{% url 'login' %}">Ingresar</a>

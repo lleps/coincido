@@ -6,6 +6,16 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 
 
+# sobre quien es la encuesta.
+# las referencias son para el.
+class Beneficiario(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    dni = models.IntegerField(help_text="DNI del beneficiario")
+    nombre = models.CharField(max_length=40, help_text="Nombre del beneficiario")
+    apellido = models.CharField(max_length=40, help_text="Apellido del beneficiario")
+
+
+
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField('date published')
@@ -59,8 +69,11 @@ class Choice(models.Model):
     choice_image = models.ImageField(null=True, blank=True)
 
 
+# Cada respuesta esta ligada a un beneficiario y a un usuario. También dice de que pregunta es,
+# y que opción escogió.
 class Answer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    beneficiario = models.ForeignKey(Beneficiario, on_delete=models.CASCADE, null=True)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice = models.IntegerField(default=0)  # choice picked in the answer
 

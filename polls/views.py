@@ -9,7 +9,7 @@ from django.urls import reverse, reverse_lazy
 from django.views import generic
 from django.contrib.auth.views import LoginView
 
-from .models import Question, Choice, Answer, Profile, AppConfig
+from .models import Question, Choice, Answer, Profile, AppConfig, Beneficiario
 
 import logging
 
@@ -62,62 +62,51 @@ def gender_preferences_match(user1, user2):
         return False
 
 
+# index. Si completo tod0 le muestra resultados, si no, le da un boton para responder.
+# como debe ser ahora:
+# - Tener un boton para "agregar" sobre un nuevo beneficiario.
+#   "Registrar beneficiario". Que te envie a la "creacion" de un beneficiario.
+#   En esa creacion te diga: DNI, Nombre, etc.
+#   Entonces vos podrias ver que beneficiarios tenias registrados a tu usuario.
+#   Y desde ahi te dice:
+#      Beneficiario 12423424 (Asd_Asd)
+#               FORMULARIO COMPLETADO ((o te diga: FORMULARIO NO COMPLETADO. COMPLETAR)).
+# Esto es trabajar en la capa: CARGADO DE DATOS POR MUNICIPIOS.
 
 def index(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('login'))
 
-    # if user has no profile, AND we require gender, redirect to the profile to create one
-    pedir_genero = AppConfig.get().pedir_genero
-    if pedir_genero:
-        try:
-            request.user.profile
-        except:
-            return HttpResponseRedirect(reverse('polls:profile'))
+    # Renderizar sólo beneficiarios registrados a mi nombre.
+    # Debo buscar un array de: { beneficiarioDNI, beneficiarioNombre, beneficiarioApellido, completoEncuestaONo }
+    # Si no es asi, llevarme
 
+    # Esta logica se debe mover abajo.
+    # Entonces: Dos cosas.
+    # - Lista de beneficiarios
+    # Boton de agregar nuevo beneficiario
+    # En la UI.
 
+    # esto moverlo abajo.
     questions = list(Question.objects.all())
     unanswered = get_first_unanswered_question_index(request.user, questions)
-    matches = []
     users = list(User.objects.all())
     has_completed_poll = unanswered == -1
-    results = []
 
-    if has_completed_poll:
-        # compare with every user that finished the poll
-        for u in users:
-            if u == request.user:
-                continue  # skip, will always match 100% myself
-
-            if get_first_unanswered_question_index(u, questions) != -1:
-                continue  # skip users that have not answered everything.
-
-            # if gender filter is on, require to be the gender we're asking
-            if pedir_genero and (not gender_preferences_match(u, request.user)):
-                continue
-
-            score = 0.0
-            max_score = len(questions)
-            for q in questions:
-                my_answer = find_answer_for_question(request.user, q)
-                u_answer = find_answer_for_question(u, q)
-                if my_answer == u_answer:
-                    score += 1.0
-
-            score = int(score / max_score * 100.0)  # convert score to percent
-            results.append({'user': u, 'score': score})
-
-    def take_score(entry):
-        return entry['score']
-
-    results.sort(key=take_score, reverse=True)
-    results = results[0:AppConfig.get().afinidad_cantidad_gente]
+    beneficiarios = Beneficiario.objects.filter(usuario=request.user)
+    results = []  # lista de { beneficiarioDNI, beneficiarioNombre, beneficiarioApellido, completoEncuestaONo }
+    for b in beneficiarios:
+        results.append({
+            'beneficiarioDNI': b.dni,
+            'beneficiarioNombre': b.nombre,
+            'beneficiarioApellido': b.apellido,
+            'completoEncuesta': False,
+        })
 
     context = {
-        'latest_question_index': unanswered,
-        'has_completed_poll': has_completed_poll,
-        'matches': results
+        'result': results
     }
+
     return render(request, 'polls/index.html', context)
 
 
