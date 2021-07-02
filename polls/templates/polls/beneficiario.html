@@ -14,17 +14,27 @@
 
             <div class="form-group">
                 <label for="inputDNI">DNI</label>
-                <input type="number" required class="form-control" id="inputDNI" aria-describedby="emailHelp" placeholder="DNI del beneficiario" name="dni">
+                <input type="number" required class="form-control" id="inputDNI" aria-describedby="emailHelp" placeholder="DNI del beneficiario..." name="dni">
             </div>
             <div class="form-group">
                 <label for="inputNombre">Nombre</label>
-                <input type="text" minlength="2" maxlength="80" required class="form-control" id="inputNombre" placeholder="Nombre del beneficiario" name="nombre">
+                <input type="text" minlength="2" maxlength="80" required class="form-control" id="inputNombre" placeholder="Nombre del beneficiario..." name="nombre">
             </div>
             <div class="form-group">
                 <label for="inputApellido">Apellido</label>
-                <input type="text" minlength="2" maxlength="80" required class="form-control" id="inputApellido" placeholder="Apellido del beneficiario" name="apellido">
+                <input type="text" minlength="2" maxlength="80" required class="form-control" id="inputApellido" placeholder="Apellido del beneficiario..." name="apellido">
             </div>
-
+            <div class="form-group">
+                <label for="inputApellido">Dirección</label>
+                <input type="text" minlength="2" maxlength="300" required class="form-control" id="inputApellido" placeholder="Dirección del beneficiario..." name="direccion">
+            </div>
+            <div class="form-group">
+                <label for="inputApellido">Observaciones (opcional)</label>
+                <textarea
+                        rows="4"
+                        type="text" minlength="" maxlength="3000" class="form-control" id="inputApellido"
+                        placeholder="Observaciones para agregar..." name="observaciones"></textarea>
+            </div>
             <button type="submit" class="btn btn-primary btn-block">Registrar</button>
         </form>
     </div>

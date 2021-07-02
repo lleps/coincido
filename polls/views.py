@@ -104,11 +104,20 @@ def beneficiario(request):
             dni = int(request.POST['dni'])
             nombre = request.POST['nombre']
             apellido = request.POST['apellido']
+            direccion = request.POST['direccion']
+            observaciones = request.POST.get('observaciones', '')
 
             if dni < 100000 or dni > 999999999 or len(nombre) < 3 or len(apellido) < 3:
                 raise ValueError()
 
-            Beneficiario.objects.create(usuario=request.user, dni=dni, nombre=nombre, apellido=apellido)
+            Beneficiario.objects.create(
+                usuario=request.user,
+                dni=dni,
+                nombre=nombre,
+                apellido=apellido,
+                direccion=direccion,
+                observaciones=observaciones
+            )
             return HttpResponseRedirect(reverse('polls:index'))
 
         except (KeyError, ValueError):

@@ -13,7 +13,13 @@ class Beneficiario(models.Model):
     dni = models.IntegerField(help_text="DNI del beneficiario")
     nombre = models.CharField(max_length=80, help_text="Nombre del beneficiario")
     apellido = models.CharField(max_length=80, help_text="Apellido del beneficiario")
+    direccion = models.CharField(max_length=300, help_text="Dirección del beneficiario", default="Direccion linea 1")
+    observaciones = models.CharField(max_length=3000, help_text="Observaciones sobre el beneficiario",
+                                     default="",
+                                     blank=True)
 
+    def __str__(self):
+        return str(self.dni) + " " + str(self.nombre) + " " + str(self.apellido)
 
 
 class Question(models.Model):
