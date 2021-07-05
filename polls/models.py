@@ -98,8 +98,9 @@ class Beneficiario(models.Model):
 
 
 class Question(models.Model):
-    question_text = models.CharField(max_length=200)
+    question_text = models.CharField(max_length=200, verbose_name="Texto")
     pub_date = models.DateTimeField('date published')
+    allow_other = models.BooleanField(verbose_name='Permitir otros', help_text="Permitir opción 'Otros'")
 
     def __str__(self):
         return self.question_text
@@ -157,6 +158,7 @@ class Answer(models.Model):
     beneficiario = models.ForeignKey(Beneficiario, on_delete=models.CASCADE, null=True)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice = models.IntegerField(default=0)  # choice picked in the answer
+    other_text = models.CharField(max_length=128, default='')
 
 
 class Profile(models.Model):

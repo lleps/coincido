@@ -42,6 +42,21 @@
                     </label>
                     <br>
                 {% endfor %}
+
+                {% if question.allow_other %}
+                    <label class="rad">
+                     <input
+                            type="radio"
+                            name="choice"
+                            id="choiceOther"
+                            value="99"
+                            {% if answer_index == 99 %} checked {% endif %}
+                        >
+                        <i></i> Otro:
+                    </label>
+                    <input type="text" class="form-control d-inline w-auto" name="other_text"/>
+                    <br>
+                {% endif %}
             {% endif %}
 
             <div class="row pt-4">

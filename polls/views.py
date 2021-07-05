@@ -264,6 +264,7 @@ def vote(request, pk, question_id):
 
     try:
         selected_choice = request.POST['choice']
+        other_text = request.POST.get('other_text', '')
     except KeyError:
         # Redisplay the question voting form.
         # TODO display with all the metadata
@@ -279,6 +280,10 @@ def vote(request, pk, question_id):
             answer = Answer.objects.create(user=request.user, beneficiario=beneficiario, question=question)
 
         answer.choice = selected_choice
+        if int(selected_choice) == 99:
+            answer.response_other = other_text
+            logger.info("response: other: " + other_text)
+
         answer.save()
 
         logger.info("Selected choice: user " + request.user.username +
