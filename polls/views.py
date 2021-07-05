@@ -33,7 +33,7 @@ def get_first_unanswered_question_index(user, beneficiario, questions):
     """Returns the index of the first non answered question, or
     -1 if has answered everything"""
 
-    answers = list(Answer.objects.filter(user=user, beneficiario=beneficiario))
+    answers = list(Answer.objects.filter(beneficiario=beneficiario))
     min_non_answered_index = 0
     for q in questions:
         responded = False
@@ -156,7 +156,7 @@ def resumen(request, user_index):
             'numero': b.inm_numero,
             'entrevistaEfectiva': b.entrevista_efectiva == 'Si' or b.entrevista_efectiva == 'si',
             'entrevistaRazon': b.entrevista_efectiva,
-            'completoEncuesta': get_first_unanswered_question_index(request.user, b, questions) == -1,
+            'completoEncuesta': get_first_unanswered_question_index(b, questions) == -1,
             'completoFamilia': b.familia is not None,
         })
 
