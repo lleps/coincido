@@ -6,8 +6,61 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 
 
+# datos sociales sobre un beneficiario.
+# por ahora omitir grupo familiar; solamente
+# el que esta a cargo y eso.
+class BeneficiarioFamilia(models.Model):
+    CANTIDAD_HOGARES_CHOICES = [
+        ('1', '1'),
+        ('2', '2'),
+        ('3', '3'),
+        ('4', '4'),
+        ('5', '5'),
+        ('6', '6'),
+        ('7', '7'),
+        ('8', '8'),
+    ]
+    ESTADO_CIVIL_CHOICES = [
+        ('soltero', 'SOLTERO/A'),
+        ('casado', 'CASADO/A'),
+        ('divorciado', 'DIVORCIADO/A'),
+        ('en-pareja', 'EN PAREJA/CONCUBINATO'),
+        ('separado', 'SEPARADO/A DE HECHO'),
+        ('viudo', 'VIUDO/A'),
+    ]
+    TIPO_DOCUMENTO_CHOICES = [
+        ('libreta-civica', 'Libreta Civica'),
+        ('libreta-de-enrolamiento', 'Libreta De enrolamiento'),
+        ('dni', 'DNI'),
+        ('doc-extranjero', 'Doc. Extranjero'),
+        ('nunca-tuvo', 'Nunca Tuvo'),
+        ('otro', 'Otro'),
+    ]
+
+    # datos del hogar
+    cantidad_hogares = models.CharField(max_length=120, choices=CANTIDAD_HOGARES_CHOICES)
+    numero_de_hogar = models.CharField(max_length=120, choices=CANTIDAD_HOGARES_CHOICES)
+
+    # datos del jefe/a
+    jefe_apellido = models.CharField(max_length=120)
+    jefe_nombre = models.CharField(max_length=120)
+    jefe_tipo_documento = models.CharField(max_length=120, choices=TIPO_DOCUMENTO_CHOICES)
+    jefe_numero_documento = models.IntegerField()
+    jefe_fecha_nacimiento = models.DateField()
+    jefe_edad = models.IntegerField()
+    jefe_telefono = models.CharField(max_length=50)
+    jefe_contacto = models.CharField(max_length=100)
+    jefe_estado_civil = models.CharField(max_length=100, choices=ESTADO_CIVIL_CHOICES)
+    jefe_personas_en_hogar = models.IntegerField()
+
+    # datos del niño/a
+    nino_apellido = models.CharField(max_length=120)
+    nino_nombre = models.CharField(max_length=120)
+    nino_tipo_documento = models.CharField(max_length=120, choices=TIPO_DOCUMENTO_CHOICES)
+    nino_numero_documento = models.IntegerField()
+
+
 # sobre quien es la encuesta.
-# las referencias son para el.
 class Beneficiario(models.Model):
     # usuario que registro el beneficiario
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -36,18 +89,12 @@ class Beneficiario(models.Model):
     ]
     entrevista_efectiva = models.CharField(choices=ENTREVISTA_EFECTIVA_CHOICES, max_length=100)
 
-    # datos del niño
-    dni = models.IntegerField(help_text="DNI del beneficiario")
-    nombre = models.CharField(max_length=80, help_text="Nombre del beneficiario")
-    apellido = models.CharField(max_length=80, help_text="Apellido del beneficiario")
-    direccion = models.CharField(max_length=300, help_text="Dirección del beneficiario", default="Direccion linea 1")
-    observaciones = models.CharField(max_length=3000, help_text="Observaciones sobre el beneficiario",
-                                     default="",
-                                     blank=True)
-
-
-    def __str__(self):
-        return str(self.dni) + " " + str(self.nombre) + " " + str(self.apellido)
+    # beneficiario familia
+    familia = models.OneToOneField(
+        BeneficiarioFamilia,
+        on_delete=models.CASCADE,
+        null=True,
+    )
 
 
 class Question(models.Model):

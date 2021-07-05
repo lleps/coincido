@@ -60,10 +60,14 @@ def index(request):
 
     for b in beneficiarios:
         results.append({
-            'beneficiarioDNI': b.dni,
-            'beneficiarioNombre': b.nombre,
-            'beneficiarioApellido': b.apellido,
+            'id': b.id,
+            'barrio': b.inm_barrio,
+            'calle': b.inm_calle,
+            'numero': b.inm_numero,
+            'entrevistaEfectiva': b.entrevista_efectiva == 'Si' or b.entrevista_efectiva == 'si',
+            'entrevistaRazon': b.entrevista_efectiva,
             'completoEncuesta': get_first_unanswered_question_index(request.user, b, questions) == -1,
+            'completoFamilia': b.familia is not None,
         })
 
     context = {
@@ -112,38 +116,32 @@ class AgregarBeneficiarioForm(forms.Form):
     entrevista_efectiva = forms.ChoiceField(choices=ENTREVISTA_EFECTIVA_CHOICES,
                                             help_text="Elija Si si la entrevista se puede completar, o alguna de "
                                                       "las razones si no se puede completar.")
-    observaciones = forms.CharField(label='Observaciones (opcional)', widget=forms.Textarea, max_length=256)
+    observaciones = forms.CharField(label='Observaciones (opcional)', widget=forms.Textarea, max_length=256,
+                                    required=False)
 
 
 # Vista para agregar un beneficiario
 def beneficiario(request):
     if request.method == "POST":
-        # get all
-        # if validation fails, re-render view.
-        try:
-            dni = int(request.POST['dni'])
-            nombre = request.POST['nombre']
-            apellido = request.POST['apellido']
-            direccion = request.POST['direccion']
-            observaciones = request.POST.get('observaciones', '')
 
-            if dni < 100000 or dni > 999999999 or len(nombre) < 3 or len(apellido) < 3:
-                raise ValueError()
-
+        # create a form instance and populate it with data from the request:
+        form = AgregarBeneficiarioForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
             Beneficiario.objects.create(
                 usuario=request.user,
-                dni=dni,
-                nombre=nombre,
-                apellido=apellido,
-                direccion=direccion,
-                observaciones=observaciones
+                entrevistador_nombre_apellido=data['nombre_y_apellido_del_entrevistador'],
+                entrevistador_fecha=data['fecha'],
+                inm_calle=data['calle'],
+                inm_numero=data['numero'],
+                inm_barrio=data['barrio'],
+                inm_localidad=data['localidad'],
+                inm_departamento=data['departamento'],
+                inm_lat=0,
+                inm_lng=0,
+                entrevista_efectiva=data['entrevista_efectiva'],
             )
             return HttpResponseRedirect(reverse('polls:index'))
-
-        except (KeyError, ValueError):
-            return render(request, 'polls/beneficiario.html', {
-                'error': 'Los datos no son válidos. Verifique nombre, apellido y DNI.',
-            })
 
     elif request.method == "GET":
         form = AgregarBeneficiarioForm()

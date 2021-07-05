@@ -22,17 +22,36 @@
                 <ul class="list-group w-100" style="max-height: 500px;margin-bottom: 10px;overflow:scroll;">
                 {% for match in result %}
                     <li class="list-group-item">
-                        <h5># {{ forloop.counter }}: {{ match.beneficiarioNombre }} {{ match.beneficiarioApellido }}, {{ match.beneficiarioDNI }}.</h5><br>
+                        <h5>{{ match.barrio }}, {{ match.calle }} {{ match.numero }}.</h5><br>
+
+                        <!-- No se pudo hacer la entrevista -->
+                        {% if not match.entrevistaEfectiva %}
+                            <span class="text-warning">{{ match.entrevistaRazon }}</span>
+                        {% else %}
 
                         <!-- Datos de si completó o no la encuesta -->
                         <span class="text-muted">
-                            {% if match.completoEncuesta %} <span class="text-success">Encuesta completada.</span> {% endif %}
-                            {% if not match.completoEncuesta %}
-                                <a href="/{{ match.beneficiarioDNI }}/0" class="btn btn-success mr-3">
-                                    Completar la encuesta
+
+                            <!-- Completar datos de la familia -->
+                            {% if not match.completoFamilia %}
+                                <a href="/{{ match.id }}/familia" class="btn btn-outline-success mr-3">
+                                    Completar datos de familia
                                 </a>
+                            {% else %}
+                                <span class="text-success">Datos de familia completos.</span>
                             {% endif %}
+
+                            <!-- Completar datos de la vivienda -->
+                            {% if not match.completoEncuesta %}
+                                <a href="/{{ match.id }}/0" class="btn btn-outline-success mr-3">
+                                    Completar datos de vivienda
+                                </a>
+                            {% else %}
+                                <span class="text-success">Datos de vivienda completos.</span>
+                            {% endif %}
+
                         </span>
+                        {% endif %}
                     </li>
                 {% endfor %}
             </ul>

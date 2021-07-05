@@ -40,6 +40,7 @@
         <form action="{% url 'polls:beneficiario' %}" method="post">
             {% csrf_token %}
 
+        <h3>Añadir beneficiario</h3>
             {% for field in form %}
                 <div class="form-group">
                     <!-- Insertar categorias -->
@@ -55,9 +56,7 @@
                 </div>
             {% endfor %}
 
-            <h3>Referencias útiles para ubicar el inmueble</h3>
-            <small class="text-muted">Ubique el inmueble en el mapa.</small>
-            <br>
+            <h3>Ubique el inmueble en el mapa.</h3>
             <div id="map"></div>
             <script async defer src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap"></script>
             <br>
