@@ -34,20 +34,20 @@
 
                             <!-- Completar datos de la familia -->
                             {% if not match.completoFamilia %}
-                                <a href="/{{ match.id }}/familia" class="btn btn-outline-success mr-3">
-                                    Completar datos de familia
+                                <a href="/{{ match.id }}/familia" class="btn btn-sm btn-primary mr-3">
+                                    Rellenar (familia)
                                 </a>
                             {% else %}
-                                <span class="text-success">Datos de familia completos.</span>
+                                <span class="text-success"><i class="fa fa-check"></i> familia.</span>
                             {% endif %}
 
                             <!-- Completar datos de la vivienda -->
                             {% if not match.completoEncuesta %}
-                                <a href="/{{ match.id }}/0" class="btn btn-outline-success mr-3">
-                                    Completar datos de vivienda
+                                <a href="/{{ match.id }}/0" class="btn btn-sm btn-primary mr-3">
+                                    Rellenar (vivienda)
                                 </a>
                             {% else %}
-                                <span class="text-success">Datos de vivienda completos.</span>
+                                <span class="text-success text-sm"><i class="fa fa-check"></i> Rellenar (vivienda).</span>
                             {% endif %}
 
                         </span>
