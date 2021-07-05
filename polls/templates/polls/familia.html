@@ -1,0 +1,125 @@
+{% extends 'polls/base.html' %}
+
+{% block title %}Pregunta{% endblock %}
+
+{% block content %}
+
+    <style>
+    input[type=text], input[type=number] {
+        display: block;
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    }
+
+    select, textarea {
+        width: 100%;
+    }
+    #map {
+        height: 200px;
+    }
+
+    h3 {
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+    </style>
+
+    {% if error %}<p><strong class="text-danger">{{ error }}</strong></p>{% endif %}
+
+    <div class="container">
+        <form action="{% url 'polls:familia' pk %}" method="post">
+            {% csrf_token %}
+
+        <h3>Detección de hogares en la vivienda</h3>
+            {% for field in form %}
+                <div class="form-group">
+                    <!-- Insertar categorias -->
+                    {% if field.label == "Apellido/s" %}
+                        <br>
+                        <h4>Datos del/a jefe/a de hogar o de la persona entrevistada</h4>
+                        <small class="text-muted">Debe ser mayor de 18 años de edad.</small>
+                        <br>
+                        <br>
+                    {% endif %}
+                    {% if field.label == 'Apellido del niño/a' %}
+                        <h3>Datos del niño/a bajo peso/talla</h3>
+                    {% endif %}
+
+                    {{ field.label_tag }}
+                    {% if field.help_text %}
+                        <p class="text-muted">{{ field.help_text|safe }}</p>
+                    {% endif %}
+                    {{ field }}
+                    <div class="text-danger">
+                    {{ field.errors }}
+                    </div>
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-primary btn-block">Guardar</button>
+        </form>
+    </div>
+
+    <script>
+// Note: This example requires that you consent to location sharing when
+// prompted by your browser. If you see the error "The Geolocation service
+// failed.", it means you probably did not give permission for the browser to
+// locate you.
+var map, infoWindow;
+function initMap() {
+	geocoder = new google.maps.Geocoder();
+
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: -34.397, lng: 150.644},
+    zoom: 16
+  });
+  infoWindow = new google.maps.InfoWindow;
+
+  // Try HTML5 geolocation.
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var pos = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+
+      geocoder.geocode( { 'location': pos}, function(results, status, infowindow) {
+      if (status == 'OK') {
+            console.log(results[0].formatted_address);
+            infoWindow.setContent('Location found: '+ results[0].formatted_address);
+            infoWindow.setPosition(pos);
+            infoWindow.open(map);
+      } else {
+      			console.log('Geocode was not successful for the following reason: ' + status);
+      }
+    });
+
+      map.setCenter(pos);
+    }, function() {
+      handleLocationError(true, infoWindow, map.getCenter());
+    });
+  } else {
+    // Browser doesn't support Geolocation
+    handleLocationError(false, infoWindow, map.getCenter());
+  }
+}
+
+function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+  infoWindow.setPosition(pos);
+  infoWindow.setContent(browserHasGeolocation ?
+                        'Error: The Geolocation service failed.' :
+                        'Error: Your browser doesn\'t support geolocation.');
+  infoWindow.open(map);
+}
+    </script>
+{% endblock %}

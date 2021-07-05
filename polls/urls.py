@@ -10,7 +10,8 @@ urlpatterns = [
     path('signup/', app_views.SignUpView.as_view(), name='signup'),
     path('beneficiario/', app_views.beneficiario, name='beneficiario'),
     path('resumen/', app_views.resumen, name='resumen'),
-    path('<int:dni>/<int:question_id>/', app_views.detail, name='detail'),
-    path('<int:dni>/<int:question_id>/results/', app_views.results, name='results'),
-    path('<int:dni>/<int:question_id>/vote/', app_views.vote, name='vote'),
+    path('familia/<int:pk>/', app_views.familia, name='familia'),
+    path('<int:pk>/<int:question_id>/', app_views.detail, name='detail'),
+    path('<int:pk>/<int:question_id>/results/', app_views.results, name='results'),
+    path('<int:pk>/<int:question_id>/vote/', app_views.vote, name='vote'),
 ]

@@ -91,6 +91,50 @@ def resumen(request):
     return render(request, 'polls/index.html')
 
 
+class FamiliaForm(forms.ModelForm):
+    class Meta:
+        model = BeneficiarioFamilia
+        fields = '__all__'
+        labels = {
+            'cantidad_hogares': 'Cantidad de hogares',
+            'jefe_apellido': 'Apellido/s',
+            'jefe_nombre': 'Nombre/s',
+            'jefe_tipo_documento': 'Tipo de documento',
+            'jefe_numero_documento': 'Número de documento',
+            'jefe_edad': 'Edad',
+            'jefe_telefono': 'Teléfono fijo/celular',
+            'jefe_contacto': 'Otro teléfono/s o formas de contactarse',
+            'jefe_estado_civil': 'Estado civil',
+            'jefe_personas_en_hogar': 'Cuantas personas viven en este hogar',
+            'jefe_fecha_nacimiento': 'Fecha de nacimiento',
+            'nino_nombre': 'Nombre del niño/a',
+            'nino_apellido': 'Apellido del niño/a',
+            'nino_tipo_documento': 'Tipo de documento',
+            'nino_numero_documento': 'Número de documento',
+        }
+
+
+def familia(request, pk):
+    beneficiario = get_object_or_404(Beneficiario, pk=pk)
+
+    if request.method == 'POST':
+        form = FamiliaForm(request.POST)
+
+        if form.is_valid():
+            new_familia = form.save()
+            beneficiario.familia = new_familia
+            beneficiario.save()
+
+            return HttpResponseRedirect(reverse('polls:index'))
+
+        return render(request, 'polls/familia.html', {'form': form, 'pk': pk})
+
+    else:
+        form = FamiliaForm()
+
+        return render(request, 'polls/familia.html', {'form': form, 'pk': pk})
+
+
 # prueba con forms
 class AgregarBeneficiarioForm(forms.Form):
     ENTREVISTA_EFECTIVA_CHOICES = [
@@ -149,12 +193,11 @@ def beneficiario(request):
         return render(request, 'polls/beneficiario.html', {'form': form})
 
 
-def detail(request, dni, question_id):
-    beneficiario = get_object_or_404(Beneficiario, dni=dni)
+def detail(request, pk, question_id):
+    beneficiario = get_object_or_404(Beneficiario, pk=pk)
 
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('login'))
-
 
     questions = list(Question.objects.all())
     if question_id < 0 or question_id >= len(questions):
@@ -177,13 +220,13 @@ def detail(request, dni, question_id):
     is_image = choice_count > 0 and choices[0].choice_image
 
     context = {
-        'dni': dni,
+        'id': beneficiario.pk,
         'question': question,
         'has_answer': False,
         'answer_index': 0,
         'question_index': question_id,
         'question_max': len(questions),
-        'question_percent': int((question_id+1)/len(questions) * 100),
+        'question_percent': int((question_id + 1) / len(questions) * 100),
         'is_last': question_id == len(questions) - 1,
         'is_first': question_id == 0,
         'prev_question_id': question_id - 1,
@@ -202,14 +245,14 @@ def detail(request, dni, question_id):
     return render(request, 'polls/detail.html', context)
 
 
-def results(request, dni, question_id):
-    beneficiario = get_object_or_404(Beneficiario, dni=dni)
+def results(request, pk, question_id):
+    beneficiario = get_object_or_404(Beneficiario, pk=pk)
     question = get_object_or_404(Question, pk=question_id)
     return render(request, 'polls/results.html', {'question': question})
 
 
-def vote(request, dni, question_id):
-    beneficiario = get_object_or_404(Beneficiario, dni=dni)
+def vote(request, pk, question_id):
+    beneficiario = get_object_or_404(Beneficiario, pk=pk)
     questions = list(Question.objects.all())
     if question_id < 0 or question_id >= len(questions):
         return Http404("invalid question index: " + question_id)
@@ -243,7 +286,7 @@ def vote(request, dni, question_id):
                     " choice: " + selected_choice)
 
         if question_id + 1 < len(questions):  # redirect to next question
-            return HttpResponseRedirect(reverse('polls:detail', args=(dni, question_id + 1,)))
+            return HttpResponseRedirect(reverse('polls:detail', args=(pk, question_id + 1,)))
         else:  # no more questions, redirect to home
             return HttpResponseRedirect(reverse('polls:index'))
 

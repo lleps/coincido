@@ -38,13 +38,13 @@ class BeneficiarioFamilia(models.Model):
     ]
 
     # datos del hogar
-    cantidad_hogares = models.CharField(max_length=120, choices=CANTIDAD_HOGARES_CHOICES)
-    numero_de_hogar = models.CharField(max_length=120, choices=CANTIDAD_HOGARES_CHOICES)
+    cantidad_hogares = models.CharField(max_length=120, choices=CANTIDAD_HOGARES_CHOICES, default='1')
+    numero_de_hogar = models.CharField(max_length=120, choices=CANTIDAD_HOGARES_CHOICES, default='1')
 
     # datos del jefe/a
     jefe_apellido = models.CharField(max_length=120)
     jefe_nombre = models.CharField(max_length=120)
-    jefe_tipo_documento = models.CharField(max_length=120, choices=TIPO_DOCUMENTO_CHOICES)
+    jefe_tipo_documento = models.CharField(max_length=120, choices=TIPO_DOCUMENTO_CHOICES, default='dni')
     jefe_numero_documento = models.IntegerField()
     jefe_fecha_nacimiento = models.DateField()
     jefe_edad = models.IntegerField()
@@ -56,7 +56,7 @@ class BeneficiarioFamilia(models.Model):
     # datos del niño/a
     nino_apellido = models.CharField(max_length=120)
     nino_nombre = models.CharField(max_length=120)
-    nino_tipo_documento = models.CharField(max_length=120, choices=TIPO_DOCUMENTO_CHOICES)
+    nino_tipo_documento = models.CharField(max_length=120, choices=TIPO_DOCUMENTO_CHOICES, default='dni')
     nino_numero_documento = models.IntegerField()
 
 

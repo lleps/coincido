@@ -12,7 +12,7 @@
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
     <div class="container">
-        <form action="{% url 'polls:vote' dni question_index %}" method="post">
+        <form action="{% url 'polls:vote' id question_index %}" method="post">
             {% csrf_token %}
 
             <!-- For image choices ... -->
@@ -50,7 +50,7 @@
                 </div>
                 <div class="col-6 text-right">
                     {% if not is_first %}
-                        <a href="/{{ dni }}/{{ prev_question_id }}" class="btn btn-secondary">Volver</a>
+                        <a href="/{{ id }}/{{ prev_question_id }}" class="btn btn-secondary">Volver</a>
                     {% endif %}
                     <input type="submit" class="btn btn-primary" value="{% if is_last %} Terminar {% else %} Siguiente {% endif %}">
                 </div>

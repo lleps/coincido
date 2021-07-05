@@ -34,11 +34,11 @@
 
                             <!-- Completar datos de la familia -->
                             {% if not match.completoFamilia %}
-                                <a href="/{{ match.id }}/familia" class="btn btn-sm btn-primary mr-3">
+                                <a href="familia/{{ match.id }}" class="btn btn-sm btn-primary mr-3">
                                     Rellenar (familia)
                                 </a>
                             {% else %}
-                                <span class="text-success"><i class="fa fa-check"></i> familia.</span>
+                                <span class="text-success"><i class="fa fa-check"></i> Rellenar (familia)</span>
                             {% endif %}
 
                             <!-- Completar datos de la vivienda -->
@@ -47,7 +47,7 @@
                                     Rellenar (vivienda)
                                 </a>
                             {% else %}
-                                <span class="text-success text-sm"><i class="fa fa-check"></i> Rellenar (vivienda).</span>
+                                <span class="text-success text-sm"><i class="fa fa-check"></i> Rellenar (vivienda)</span>
                             {% endif %}
 
                         </span>
