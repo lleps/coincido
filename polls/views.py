@@ -29,7 +29,7 @@ def find_answer_for_question(user, question):
         return 0
 
 
-def get_first_unanswered_question_index(user, beneficiario, questions):
+def get_first_unanswered_question_index(beneficiario, questions):
     """Returns the index of the first non answered question, or
     -1 if has answered everything"""
 
@@ -66,7 +66,7 @@ def index(request):
             'numero': b.inm_numero,
             'entrevistaEfectiva': b.entrevista_efectiva == 'Si' or b.entrevista_efectiva == 'si',
             'entrevistaRazon': b.entrevista_efectiva,
-            'completoEncuesta': get_first_unanswered_question_index(request.user, b, questions) == -1,
+            'completoEncuesta': get_first_unanswered_question_index(b, questions) == -1,
             'completoFamilia': b.familia is not None,
         })
 
