@@ -1,15 +1,12 @@
-from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
+from django.http import HttpResponseRedirect
 from django.http import Http404
-from django.template import loader
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse, reverse_lazy
 from django.views import generic
-from django.contrib.auth.views import LoginView
+from django import forms
 
-from .models import Question, Choice, Answer, Profile, AppConfig, Beneficiario
+from .models import *
 
 import logging
 
@@ -53,26 +50,6 @@ def get_first_unanswered_question_index(user, beneficiario, questions):
     return -1
 
 
-def gender_preferences_match(user1, user2):
-    try:
-        profile1 = user1.profile
-        profile2 = user2.profile
-        return profile1.gender == profile2.gender_preference and profile2.gender == profile1.gender_preference
-    except:
-        return False
-
-
-# index. Si completo tod0 le muestra resultados, si no, le da un boton para responder.
-# como debe ser ahora:
-# - Tener un boton para "agregar" sobre un nuevo beneficiario.
-#   "Registrar beneficiario". Que te envie a la "creacion" de un beneficiario.
-#   En esa creacion te diga: DNI, Nombre, etc.
-#   Entonces vos podrias ver que beneficiarios tenias registrados a tu usuario.
-#   Y desde ahi te dice:
-#      Beneficiario 12423424 (Asd_Asd)
-#               FORMULARIO COMPLETADO ((o te diga: FORMULARIO NO COMPLETADO. COMPLETAR)).
-# Esto es trabajar en la capa: CARGADO DE DATOS POR MUNICIPIOS.
-
 def index(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('login'))
@@ -96,6 +73,49 @@ def index(request):
     return render(request, 'polls/index.html', context)
 
 
+# Muestra resumen de todos los beneficiarios.
+def resumen(request):
+    beneficiarios = Beneficiario.objects.all()
+    results = []
+    for b in beneficiarios:
+        results.append({
+            'beneficiarioDNI': b.dni,
+            'beneficiarioNombre': b.nombre,
+            'beneficiarioApellido': b.apellido
+        })
+
+    return render(request, 'polls/index.html')
+
+
+# prueba con forms
+class AgregarBeneficiarioForm(forms.Form):
+    ENTREVISTA_EFECTIVA_CHOICES = [
+        ('si', 'Si'),
+        ('rechazo', 'No: Rechazo'),
+        ('lote-baldio', 'No: Lote Baldío'),
+        ('se-mudo', 'No: Se mudó'),
+        ('otros', 'No: Otros'),
+    ]
+
+    # entrevistador
+    nombre_y_apellido_del_entrevistador = forms.CharField(max_length=100)
+    fecha = forms.DateField(initial=timezone.now(), disabled=True)
+
+    # calle
+    calle = forms.CharField(max_length=128)
+    numero = forms.IntegerField()
+    barrio = forms.CharField(max_length=128)
+    localidad = forms.CharField(max_length=128)
+    departamento = forms.CharField(max_length=128)
+
+    # entrevista efectiva o no
+    entrevista_efectiva = forms.ChoiceField(choices=ENTREVISTA_EFECTIVA_CHOICES,
+                                            help_text="Elija Si si la entrevista se puede completar, o alguna de "
+                                                      "las razones si no se puede completar.")
+    observaciones = forms.CharField(label='Observaciones (opcional)', widget=forms.Textarea, max_length=256)
+
+
+# Vista para agregar un beneficiario
 def beneficiario(request):
     if request.method == "POST":
         # get all
@@ -126,35 +146,9 @@ def beneficiario(request):
             })
 
     elif request.method == "GET":
-        return render(request, 'polls/beneficiario.html')
+        form = AgregarBeneficiarioForm()
 
-
-class SignupFormWithEmail(UserCreationForm):
-    class Meta:
-        model = User
-        fields = ("username", "email",)
-
-
-class SignupForm(UserCreationForm):
-    class Meta:
-        model = User
-        fields = ("username",)
-
-
-def get_sign_up_form():
-    try:
-        if AppConfig.get().pedir_email:
-            return SignupFormWithEmail
-        else:
-            return SignupForm
-    except:
-        return SignupFormWithEmail
-
-
-class SignUpView(generic.CreateView):
-    form_class = get_sign_up_form()
-    success_url = reverse_lazy('login')
-    template_name = 'registration/signup.html'
+        return render(request, 'polls/beneficiario.html', {'form': form})
 
 
 def detail(request, dni, question_id):
@@ -256,39 +250,30 @@ def vote(request, dni, question_id):
             return HttpResponseRedirect(reverse('polls:index'))
 
 
-def profile(request):
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('login'))
-
-    if request.method == "GET":
-        context = {
-            'gender': 'M',
-            'gender_preference': 'F'
-        }
-        try:
-            p = request.user.profile
-            context['gender'] = p.gender
-            context['gender_preference'] = p.gender_preference
-        except:  # ignore, set to defaults
-            pass
-
-        logger.info("context is " + str(context))
-        return render(request, 'polls/profile.html', context)
-    elif request.method == "POST":
-
-        # make the profile for this user
-        try:
-            profile = Profile.objects.get(user=request.user)
-
-        except Profile.DoesNotExist:
-            profile = Profile.objects.create(user=request.user)
+# Vista para registrarse
+class SignupFormWithEmail(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ("username", "email",)
 
 
-        profile.gender = request.POST['gender']
-        profile.gender_preference = request.POST['gender_preference']
-        profile.save()
+class SignupForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ("username",)
 
-        logger.warning("g")
 
-        return HttpResponseRedirect(reverse('polls:index'))
+def get_sign_up_form():
+    try:
+        if AppConfig.get().pedir_email:
+            return SignupFormWithEmail
+        else:
+            return SignupForm
+    except:
+        return SignupFormWithEmail
 
+
+class SignUpView(generic.CreateView):
+    form_class = get_sign_up_form()
+    success_url = reverse_lazy('login')
+    template_name = 'registration/signup.html'

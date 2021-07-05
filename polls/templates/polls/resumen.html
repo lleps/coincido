@@ -5,40 +5,24 @@
 {% block content %}
     {% if user.is_authenticated %}
         <div class="row">
-            <!-- Imagen top -->
-            <div class="col-md-6">
-                <img class="w-100" src="{{ cfg.imagen_principal.url }}" alt="Imágen principal">
-            </div>
-
-            <!-- Ver lista de beneficiarios -->
-            <div class="col-md-6">
-                <!-- Agregar beneficiario -->
-                <div class="mt-2">
-                    <a href="/beneficiario" class="btn btn-primary btn-block mt-auto w-100 my-3">
-                        Añadir beneficiario
-                    </a>
-                </div>
-
-                <ul class="list-group w-100" style="max-height: 500px;margin-bottom: 10px;overflow:scroll;">
+            <ul class="list-group w-100" style="max-height: 500px;margin-bottom: 10px;overflow:scroll;">
                 {% for match in result %}
                     <li class="list-group-item">
                         <h5># {{ forloop.counter }}: {{ match.beneficiarioNombre }} {{ match.beneficiarioApellido }}, {{ match.beneficiarioDNI }}.</h5><br>
 
-                        <!-- Datos de si completó o no la encuesta -->
                         <span class="text-muted">
                             {% if match.completoEncuesta %} <span class="text-success">Encuesta completada.</span> {% endif %}
                             {% if not match.completoEncuesta %}
-                                <a href="/{{ match.beneficiarioDNI }}/0" class="btn btn-success mr-3">
-                                    Completar la encuesta
+                                <span class="text-danger">Encuesta incompleta.</span>
+                                {% else %}
+                                <span class="text-success">Encuesta completa.</span>
+                                <a href="/results/{{ match.beneficiarioDNI }}" class="btn btn-success">Ver resultado</a>
                                 </a>
                             {% endif %}
                         </span>
                     </li>
                 {% endfor %}
             </ul>
-
-        </div>
-
 
         </div>
 

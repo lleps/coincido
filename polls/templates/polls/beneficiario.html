@@ -4,7 +4,35 @@
 
 {% block content %}
 
-    <h2 class="my-3">Registrar un beneficiario</h2>
+    <style>
+    input[type=text], input[type=number] {
+        display: block;
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    }
+
+    select, textarea {
+        width: 100%;
+    }
+    #map {
+        height: 200px;
+    }
+
+    h3 {
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+    </style>
 
     {% if error %}<p><strong class="text-danger">{{ error }}</strong></p>{% endif %}
 
@@ -12,31 +40,81 @@
         <form action="{% url 'polls:beneficiario' %}" method="post">
             {% csrf_token %}
 
-            <div class="form-group">
-                <label for="inputDNI">DNI</label>
-                <input type="number" required class="form-control" id="inputDNI" aria-describedby="emailHelp" placeholder="DNI del beneficiario..." name="dni">
-            </div>
-            <div class="form-group">
-                <label for="inputNombre">Nombre</label>
-                <input type="text" minlength="2" maxlength="80" required class="form-control" id="inputNombre" placeholder="Nombre del beneficiario..." name="nombre">
-            </div>
-            <div class="form-group">
-                <label for="inputApellido">Apellido</label>
-                <input type="text" minlength="2" maxlength="80" required class="form-control" id="inputApellido" placeholder="Apellido del beneficiario..." name="apellido">
-            </div>
-            <div class="form-group">
-                <label for="inputApellido">Dirección</label>
-                <input type="text" minlength="2" maxlength="300" required class="form-control" id="inputApellido" placeholder="Dirección del beneficiario..." name="direccion">
-            </div>
-            <div class="form-group">
-                <label for="inputApellido">Observaciones (opcional)</label>
-                <textarea
-                        rows="4"
-                        type="text" minlength="" maxlength="3000" class="form-control" id="inputApellido"
-                        placeholder="Observaciones para agregar..." name="observaciones"></textarea>
-            </div>
+            {% for field in form %}
+                <div class="form-group">
+                    <!-- Insertar categorias -->
+                    {% if field.label == "Calle" %}
+                        <h3>Datos generales de la ubicación del inmueble</h3>
+                    {% endif %}
+                    {{ field.errors }}
+                    {{ field.label_tag }}
+                    {% if field.help_text %}
+                        <p class="text-muted">{{ field.help_text|safe }}</p>
+                    {% endif %}
+                    {{ field }}
+                </div>
+            {% endfor %}
+
+            <h3>Referencias útiles para ubicar el inmueble</h3>
+            <small class="text-muted">Ubique el inmueble en el mapa.</small>
+            <br>
+            <div id="map"></div>
+            <script async defer src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap"></script>
+            <br>
             <button type="submit" class="btn btn-primary btn-block">Registrar</button>
         </form>
     </div>
 
+    <script>
+// Note: This example requires that you consent to location sharing when
+// prompted by your browser. If you see the error "The Geolocation service
+// failed.", it means you probably did not give permission for the browser to
+// locate you.
+var map, infoWindow;
+function initMap() {
+	geocoder = new google.maps.Geocoder();
+
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: -34.397, lng: 150.644},
+    zoom: 16
+  });
+  infoWindow = new google.maps.InfoWindow;
+
+  // Try HTML5 geolocation.
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var pos = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+
+      geocoder.geocode( { 'location': pos}, function(results, status, infowindow) {
+      if (status == 'OK') {
+            console.log(results[0].formatted_address);
+            infoWindow.setContent('Location found: '+ results[0].formatted_address);
+            infoWindow.setPosition(pos);
+            infoWindow.open(map);
+      } else {
+      			console.log('Geocode was not successful for the following reason: ' + status);
+      }
+    });
+
+      map.setCenter(pos);
+    }, function() {
+      handleLocationError(true, infoWindow, map.getCenter());
+    });
+  } else {
+    // Browser doesn't support Geolocation
+    handleLocationError(false, infoWindow, map.getCenter());
+  }
+}
+
+function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+  infoWindow.setPosition(pos);
+  infoWindow.setContent(browserHasGeolocation ?
+                        'Error: The Geolocation service failed.' :
+                        'Error: Your browser doesn\'t support geolocation.');
+  infoWindow.open(map);
+}
+    </script>
 {% endblock %}

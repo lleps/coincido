@@ -5,7 +5,8 @@
 <head>
     <link rel="stylesheet" href="{% static 'polls/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'polls/style.css' %}">
-    <title>{% block title %}Coincido{% endblock %}</title>
+    <title>{% block title %}RELEVAMIENTO SOCIAL{% endblock %}</title>
+    <meta name="theme-color" content="#2196f3" />
 
 <!-- Overwrite color variables -->
 <style>
@@ -37,9 +38,6 @@
       {% else %}
         <li class="nav-item">
             <a class="nav-link" href="/accounts/login">Ingresar</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/signup">Registrarse</a>
         </li>
       {% endif %}
     </ul>

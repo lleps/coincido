@@ -9,7 +9,34 @@ from django.contrib.auth.models import User
 # sobre quien es la encuesta.
 # las referencias son para el.
 class Beneficiario(models.Model):
+    # usuario que registro el beneficiario
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    # entrevistador
+    entrevistador_nombre_apellido = models.CharField(max_length=100, help_text="Nombre y apellido del entrevistador",
+                                                     default="")
+    entrevistador_fecha = models.DateField(help_text="Fecha", auto_now_add=True)
+
+    # datos generales del inmueble
+    inm_calle = models.CharField(max_length=256, help_text="Calle", default="")
+    inm_numero = models.IntegerField(help_text="Número", default=0)
+    inm_barrio = models.CharField(max_length=256, help_text="Barrio", default="")
+    inm_localidad = models.CharField(max_length=100, help_text="Localidad", default="")
+    inm_departamento = models.CharField(max_length=100, help_text="Departament", default="")
+    inm_lat = models.DecimalField(max_digits=22, decimal_places=16, blank=True, default=0)
+    inm_lng = models.DecimalField(max_digits=22, decimal_places=16, blank=True, default=0)
+
+    # entrevista efectiva
+    ENTREVISTA_EFECTIVA_CHOICES = [
+        ('si', 'Si'),
+        ('rechazo', 'No: Rechazo'),
+        ('lote-baldio', 'No: Lote Baldío'),
+        ('se-mudo', 'No: Se mudó'),
+        ('otros', 'No: Otros'),
+    ]
+    entrevista_efectiva = models.CharField(choices=ENTREVISTA_EFECTIVA_CHOICES, max_length=100)
+
+    # datos del niño
     dni = models.IntegerField(help_text="DNI del beneficiario")
     nombre = models.CharField(max_length=80, help_text="Nombre del beneficiario")
     apellido = models.CharField(max_length=80, help_text="Apellido del beneficiario")
@@ -17,6 +44,7 @@ class Beneficiario(models.Model):
     observaciones = models.CharField(max_length=3000, help_text="Observaciones sobre el beneficiario",
                                      default="",
                                      blank=True)
+
 
     def __str__(self):
         return str(self.dni) + " " + str(self.nombre) + " " + str(self.apellido)
