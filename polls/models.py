@@ -101,6 +101,7 @@ class Question(models.Model):
     question_text = models.CharField(max_length=200, verbose_name="Texto")
     pub_date = models.DateTimeField('date published')
     allow_other = models.BooleanField(verbose_name='Permitir otros', help_text="Permitir opción 'Otros'")
+    allow_image = models.BooleanField(verbose_name='Permitir poner una imágen')
 
     def __str__(self):
         return self.question_text
@@ -159,6 +160,7 @@ class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice = models.IntegerField(default=0)  # choice picked in the answer
     other_text = models.CharField(max_length=128, default='')
+    image = models.ImageField(null=True, blank=True)
 
 
 class Profile(models.Model):

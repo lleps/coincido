@@ -11,6 +11,7 @@ urlpatterns = [
     path('beneficiario/', app_views.beneficiario, name='beneficiario'),
     path('resumen/', app_views.resumen, name='resumen'),
     path('familia/<int:pk>/', app_views.familia, name='familia'),
+    path('upload_img/<int:beneficiario_id>/<int:question_id>/', app_views.upload_img, name='upload_img'),
     path('<int:pk>/<int:question_id>/', app_views.detail, name='detail'),
     path('<int:pk>/<int:question_id>/results/', app_views.results, name='results'),
     path('<int:pk>/<int:question_id>/vote/', app_views.vote, name='vote'),

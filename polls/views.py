@@ -193,6 +193,10 @@ def beneficiario(request):
         return render(request, 'polls/beneficiario.html', {'form': form})
 
 
+class UploadImageForm(forms.Form):
+    imagen = forms.ImageField(label="", label_suffix="")
+
+
 def detail(request, pk, question_id):
     beneficiario = get_object_or_404(Beneficiario, pk=pk)
 
@@ -234,6 +238,8 @@ def detail(request, pk, question_id):
         'is_image': is_image
     }
 
+    answer = None
+
     try:
         answer = Answer.objects.get(user=request.user, beneficiario=beneficiario, question=question)
         context['has_answer'] = True
@@ -242,7 +248,50 @@ def detail(request, pk, question_id):
     except Answer.DoesNotExist:
         logger.info("can't find answer")
 
+    # add image field
+    if question.allow_image:
+        form = UploadImageForm()
+
+        # add image (if it has one)
+        if answer is not None and answer.image:
+            form = UploadImageForm(initial={'imagen': answer.image})
+            logger.info("set to form the image of answer.image")
+
+        else:
+            logger.info("answer is none or IDK but img doesnt exists")
+        context['img_form'] = form
+
     return render(request, 'polls/detail.html', context)
+
+
+# endpoint to upload images to a response
+def upload_img(request, beneficiario_id, question_id):
+    questions = list(Question.objects.all())
+    if question_id < 0 or question_id >= len(questions):
+        return Http404("invalid question index: " + question_id)
+
+    question = questions[question_id]
+
+    logger.info("question gfound!")
+    beneficiario = get_object_or_404(Beneficiario, pk=beneficiario_id)
+    logger.info("beneficiario found!")
+
+    if request.method == 'POST':
+        form = UploadImageForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            # crear u obtener una "response".
+            try:
+                answer = Answer.objects.get(user=request.user, beneficiario=beneficiario, question=question)
+            except Answer.DoesNotExist:
+                answer = Answer.objects.create(user=request.user, beneficiario=beneficiario, question=question)
+
+            answer.image = form.cleaned_data['imagen']
+            answer.save()
+            return HttpResponseRedirect(reverse('polls:detail', args=(beneficiario_id, question_id,)))
+
+
+    return HttpResponseRedirect(reverse('polls:detail', args=(beneficiario_id, question_id,)))
 
 
 def results(request, pk, question_id):

@@ -12,6 +12,17 @@
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
     <div class="container">
+
+        {% if question.allow_image %}
+            <h5><i class="fa fa-image"></i> Puedes adjuntar una imagen:</h5>
+            <form method = "post" enctype="multipart/form-data" action="/upload_img/{{ id }}/{{ question_index }}/">
+                {% csrf_token %}
+                {{ img_form.as_p }}
+                <button type="submit" class="btn btn-secondary"><i class="fa fa-upload"></i> Subir</button>
+            </form>
+            <hr>
+        {% endif %}
+
         <form action="{% url 'polls:vote' id question_index %}" method="post">
             {% csrf_token %}
 
@@ -56,6 +67,10 @@
                     </label>
                     <input type="text" class="form-control d-inline w-auto" name="other_text"/>
                     <br>
+                {% endif %}
+
+                {% if question.allow_image %}
+
                 {% endif %}
             {% endif %}
 
