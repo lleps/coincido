@@ -1,0 +1,65 @@
+{% extends 'polls/base.html' %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+
+    <div class="col">
+        <h3>Datos generales</h3>
+        <ul>
+            <li>Entrevistador: <b>{{ b.entrevistador_nombre_apellido }}</b></li>
+            <li>Fecha: <b>{{ b.entrevistador_fecha }}</b></li>
+            <li>Calle: <b>{{ b.inm_calle }}</b></li>
+            <li>Numero: <b>{{ b.inm_numero }}</b></li>
+            <li>Barrio: <b>{{ b.inm_barrio }}</b></li>
+            <li>Localidad: <b>{{ b.inm_localidad }}</b></li>
+            <li>Departamento: <b>{{ b.inm_departamento }}</b></li>
+            <li>Entrevista efectiva: <b>{{ b.entrevista_efectiva }}</b></li>
+        </ul>
+
+        <h3>Sobre el jefe/a de familia</h3>
+        <ul>
+            <li>Cantidad de hogares: <b>{{ f.cantidad_hogares }}</b></li>
+            <li>Numero de hogar: <b>{{ f.numero_de_hogar }}</b></li>
+            <li>Apellido: <b>{{ f.jefe_apellido }}</b></li>
+            <li>Nombre: <b>{{ f.jefe_nombre }}</b></li>
+            <li>Tipo de documento: <b>{{ f.jefe_tipo_documento }}</b></li>
+            <li>Numero de documento: <b>{{ f.jefe_numero_documento }}</b></li>
+            <li>Fecha de nacimiento: <b>{{ f.jefe_fecha_nacimiento }}</b></li>
+            <li>Edad: <b>{{ f.jefe_edad }}</b></li>
+            <li>Teléfono: <b>{{ f.jefe_telefono }}</b></li>
+            <li>Contacto extra: <b>{{ f.jefe_contacto }}</b></li>
+            <li>Estado civil: <b>{{ f.jefe_estado_civil }}</b></li>
+            <li>Personas en el hogar: <b>{{ f.jefe_personas_en_hogar }}</b></li>
+        </ul>
+
+        <h3>Sobre el niño/a</h3>
+        <ul>
+            <li>Apellido: <b>{{ f.nino_apellido }}</b></li>
+            <li>Nombre: <b>{{ f.nino_nombre }}</b></li>
+            <li>Tipo de documento: <b>{{ f.nino_tipo_documento }}</b></li>
+            <li>Número de documento: <b>{{ f.nino_numero_documento }}</b></li>
+        </ul>
+
+        <h3>Sobre la vivienda</h3>
+        <ul>
+            {% for q in qa %}
+                <li>
+                    {{ q.q }}: <b>{{ q.a }}</b>
+                    {% if q.img %}
+                        <br>
+                        <i class="fa fa-image"></i><b>Imagen adjunta:</b>
+                        <br>
+                        <img src="{{ q.img.url }}" alt="" width="33%" height="33%">
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    {% else %}
+      <a href="{% url 'login' %}">Ingresar</a>
+    {% endif %}
+
+{% endblock %}

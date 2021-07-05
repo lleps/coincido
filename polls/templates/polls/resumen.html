@@ -4,22 +4,38 @@
 
 {% block content %}
     {% if user.is_authenticated %}
-        <div class="row">
-            <ul class="list-group w-100" style="max-height: 500px;margin-bottom: 10px;overflow:scroll;">
+
+        <div class="col">
+        <h1>Todos los relevamientos</h1>
+            <!-- All tabs -->
+            <ul class="nav nav-tabs">
+                {% for u in usuarios %}
+                <li class="nav-item">
+                    <a class="nav-link {% if selected_user == forloop.counter0 %} active {% endif %}" href="/resumen/{{ forloop.counter0 }}">{{ u }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+
+            <ul class="list-group">
                 {% for match in result %}
                     <li class="list-group-item">
-                        <h5># {{ forloop.counter }}: {{ match.beneficiarioNombre }} {{ match.beneficiarioApellido }}, {{ match.beneficiarioDNI }}.</h5><br>
+                        <h5>{{ match.barrio }}, {{ match.calle }} {{ match.numero }}.</h5><br>
 
+                        {% if not match.completoEncuesta or not match.completoFamilia %}
                         <span class="text-muted">
-                            {% if match.completoEncuesta %} <span class="text-success">Encuesta completada.</span> {% endif %}
-                            {% if not match.completoEncuesta %}
-                                <span class="text-danger">Encuesta incompleta.</span>
-                                {% else %}
-                                <span class="text-success">Encuesta completa.</span>
-                                <a href="/results/{{ match.beneficiarioDNI }}" class="btn btn-success">Ver resultado</a>
-                                </a>
+                            {% if match.completoEncuesta %} <span class="text-success">Completó vivienda.</span>
+                            {% else %} <span class="text-danger">No completó vivienda.</span>
+                            {% endif %}
+
+                            {% if match.completoFamilia %} <span class="text-success">Completó familia.</span>
+                            {% else %} <span class="text-danger">No completó familia.</span>
                             {% endif %}
                         </span>
+                        {% endif %}
+
+                        {% if match.completoEncuesta and match.completoFamilia %}
+                            <a href="/detalle/{{ match.id }}" class="btn btn-primary">Ver detalle</a>
+                        {% endif %}
                     </li>
                 {% endfor %}
             </ul>
@@ -28,7 +44,6 @@
 
     {% else %}
       <a href="{% url 'login' %}">Ingresar</a>
-      <a href="{% url 'polls:signup' %}">Registrarse</a>
     {% endif %}
 
 {% endblock %}

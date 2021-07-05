@@ -77,18 +77,92 @@ def index(request):
     return render(request, 'polls/index.html', context)
 
 
+# TODO: Muestra detalles sobre dicho beneficiario.
+def detalle(request, beneficiario_id):
+    beneficiario = get_object_or_404(Beneficiario, pk=beneficiario_id)
+
+    if beneficiario.familia is None:
+        return Http404("beneficiario incompleto")
+
+    qa = []
+    questions = Question.objects.all()
+    answers = Answer.objects.filter(beneficiario=beneficiario)
+
+    for q in questions:
+        choices = Choice.objects.filter(question=q)
+
+        try:
+            answer = Answer.objects.get(question=q, beneficiario=beneficiario)
+            answer_text = ""
+            if answer.choice == 99 or answer.choice == '99':
+                answer_text = "Otro: " + str(answer.other_text)
+            else:
+                answer_text = choices[answer.choice].choice_text
+
+
+            entry = {
+                'q': q.question_text,
+                'a': answer_text,
+            }
+
+            if answer.image is not None:
+                logger.info("HAS IMAGE! answer")
+                entry['img'] = answer.image
+            else:
+                logger.info("DOES NOT HAVE IMAGE!")
+                entry['img'] = None
+
+            #logger.info(entry['img'])
+
+            qa.append(entry)
+        except Answer.DoesNotExist:
+            continue
+
+    context = {
+        'b': beneficiario,
+        'f': beneficiario.familia,
+        'qa': qa,
+    }
+    logger.info(context)
+    return render(request, "polls/detalle.html", context)
+
+
 # Muestra resumen de todos los beneficiarios.
-def resumen(request):
-    beneficiarios = Beneficiario.objects.all()
-    results = []
+def resumen(request, user_index):
+    usuarios = User.objects.all()
+    if user_index < 0 or user_index >= len(usuarios):
+        return Http404("Invalid user index: " + str(user_index))
+
+    usuario = usuarios[user_index]
+    context = {}
+
+    context['selected_user'] = user_index
+
+    # lista de usuarios primero
+    usuarios_result = []
+    for u in User.objects.all():
+        usuarios_result.append(u.username)
+
+    context['usuarios'] = usuarios_result
+    questions = Question.objects.all()
+    beneficiarios = Beneficiario.objects.filter(usuario=usuario)
+
+    beneficiarios_result = []
     for b in beneficiarios:
-        results.append({
-            'beneficiarioDNI': b.dni,
-            'beneficiarioNombre': b.nombre,
-            'beneficiarioApellido': b.apellido
+        beneficiarios_result.append({
+            'id': b.id,
+            'barrio': b.inm_barrio,
+            'calle': b.inm_calle,
+            'numero': b.inm_numero,
+            'entrevistaEfectiva': b.entrevista_efectiva == 'Si' or b.entrevista_efectiva == 'si',
+            'entrevistaRazon': b.entrevista_efectiva,
+            'completoEncuesta': get_first_unanswered_question_index(request.user, b, questions) == -1,
+            'completoFamilia': b.familia is not None,
         })
 
-    return render(request, 'polls/index.html')
+    context['result'] = beneficiarios_result
+
+    return render(request, 'polls/resumen.html', context)
 
 
 class FamiliaForm(forms.ModelForm):

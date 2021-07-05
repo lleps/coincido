@@ -12,12 +12,21 @@
 
             <!-- Ver lista de beneficiarios -->
             <div class="col-md-6">
+
                 <!-- Agregar beneficiario -->
-                <div class="mt-2">
-                    <a href="/beneficiario" class="btn btn-primary btn-block mt-auto w-100 my-3">
-                        Añadir beneficiario
+                <div class="">
+                    <a href="/beneficiario" class="btn btn-success btn-block mt-auto w-100 mb-1 mt-3">
+                        <i class="fa fa-plus"></i> Añadir domicilio
                     </a>
                 </div>
+
+              {% if request.user.is_staff %}
+                <div class="mb-2">
+                    <a href="/resumen/0" class="btn btn-secondary btn-block mt-auto w-100 mb-1">
+                        <i class="fa fa-file-alt"></i> Ver resumen
+                    </a>
+                </div>
+                {% endif %}
 
                 <ul class="list-group w-100" style="max-height: 500px;margin-bottom: 10px;overflow:scroll;">
                 {% for match in result %}
@@ -38,7 +47,7 @@
                                     Rellenar (familia)
                                 </a>
                             {% else %}
-                                <span class="text-success"><i class="fa fa-check"></i> Rellenar (familia)</span>
+                                <span class="text-success"><i class="fa fa-check"></i> Familia</span>
                             {% endif %}
 
                             <!-- Completar datos de la vivienda -->
@@ -47,7 +56,7 @@
                                     Rellenar (vivienda)
                                 </a>
                             {% else %}
-                                <span class="text-success text-sm"><i class="fa fa-check"></i> Rellenar (vivienda)</span>
+                                <span class="text-success text-sm"><i class="fa fa-check"></i> Vivienda</span>
                             {% endif %}
 
                         </span>
@@ -63,7 +72,6 @@
 
     {% else %}
       <a href="{% url 'login' %}">Ingresar</a>
-      <a href="{% url 'polls:signup' %}">Registrarse</a>
     {% endif %}
 
 {% endblock %}

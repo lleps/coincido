@@ -1,6 +1,6 @@
 {% extends 'polls/base.html' %}
 
-{% block title %}Pregunta{% endblock %}
+{% block title %}Domicilio{% endblock %}
 
 {% block content %}
 
@@ -40,7 +40,7 @@
         <form action="{% url 'polls:beneficiario' %}" method="post">
             {% csrf_token %}
 
-        <h3>Añadir beneficiario</h3>
+        <h3>Añadir domicilio</h3>
             {% for field in form %}
                 <div class="form-group">
                     <!-- Insertar categorias -->
