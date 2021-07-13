@@ -1,189 +1,175 @@
-    <link rel="stylesheet" href="/static/polls/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="/static/polls/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <style>
-        body {
-            font-size: 150%;
-        }
-        h2 {
-            background: lightgray;
-            width: 100%;
-            margin-top: 80px;
-            margin-bottom: 40px;
-        }
-        h3 {
-            margin-top: 30px;
-        }
-    </style>
+<style>
+    body {
+        font-size: 150%;
+    }
+    h2 {
+        background: lightgray;
+        width: 100%;
+        margin-top: 80px;
+        margin-bottom: 40px;
+    }
+    h3 {
+        margin-top: 30px;
+    }
+</style>
 <img src="/static/polls/header.png" style="width: 100%;
     transform: scale(0.5);
     text-align: left;"/>
 
 
-    <div class="col">
-        <h1 class="w-100 text-center">PROGRAMA DE AYUDAS URGENTES</h1>
-        <h2 class="w-100 text-center">DATOS GENERALES</h2>
+<div class="col">
+    <h1 class="w-100 text-center">PROGRAMA DE AYUDAS URGENTES</h1>
+    <h2 class="w-100 text-center">DATOS GENERALES</h2>
 
-        <h3 class="w-100">Solicitante</h3>
+    <h3 class="w-100">Solicitante</h3>
 
-        Apellido/s: <b>{{ f.jefe_apellido }}</b><br>
-        Nombre: <b>{{ f.jefe_nombre }}</b><br>
-        Documento de identidad, tipo: <b>{{ f.jefe_tipo_documento }}</b><br>
-        DNI N°: <b>{{ f.jefe_numero_documento }}</b><br>
-        Fecha de nacimiento: <b>{{ f.jefe_fecha_nacimiento }}</b><br>
-        Edad: <b>{{ f.jefe_edad }}</b><br>
-        Nacionalidad: <b>{{ f.jefe_nacionalidad }}</b><br>
-        Estado civil: <b>{{ f.jefe_estado_civil }}</b><br>
+    Apellido/s: <b>{{ f.jefe_apellido }}</b><br>
+    Nombre: <b>{{ f.jefe_nombre }}</b><br>
+    Documento de identidad, tipo: <b>{{ f.jefe_tipo_documento }}</b><br>
+    DNI N°: <b>{{ f.jefe_numero_documento }}</b><br>
+    Fecha de nacimiento: <b>{{ f.jefe_fecha_nacimiento }}</b><br>
+    Edad: <b>{{ f.jefe_edad }}</b><br>
+    Nacionalidad: <b>{{ f.jefe_nacionalidad }}</b><br>
+    Estado civil: <b>{{ f.jefe_estado_civil }}</b><br>
 
-        <h3 class="w-100">Domicilio</h3>
-        Calle: <b>{{ b.inm_calle }}</b><br>
-        Numero: <b>{{ b.inm_numero }}</b><br>
-        Barrio: <b>{{ b.inm_barrio }}</b><br>
-        Localidad: <b>{{ b.inm_localidad }}</b><br>
-        CP: <b>{{ b.inm_codigo_postal }}</b><br>
-        Departamento: <b>{{ b.inm_departamento }}</b><br>
-        Teléfono: <b>{{ f.jefe_telefono }}</b><br>
-        Teléfono alternativo: <b>{{ f.jefe_contacto }}</b><br>
-        Entrevista efectiva: <b>{{ b.entrevista_efectiva }}</b><br>
-        Entrevistador: <b>{{ b.entrevistador_nombre_apellido }}</b><br>
-        Fecha: <b>{{ b.entrevistador_fecha }}</b><br>
+    <h3 class="w-100">Domicilio</h3>
+    Calle: <b>{{ b.inm_calle }}</b><br>
+    Numero: <b>{{ b.inm_numero }}</b><br>
+    Barrio: <b>{{ b.inm_barrio }}</b><br>
+    Localidad: <b>{{ b.inm_localidad }}</b><br>
+    CP: <b>{{ b.inm_codigo_postal }}</b><br>
+    Departamento: <b>{{ b.inm_departamento }}</b><br>
+    Teléfono: <b>{{ f.jefe_telefono }}</b><br>
+    Teléfono alternativo: <b>{{ f.jefe_contacto }}</b><br>
+    Entrevista efectiva: <b>{{ b.entrevista_efectiva }}</b><br>
+    Entrevistador: <b>{{ b.entrevistador_nombre_apellido }}</b><br>
+    Fecha: <b>{{ b.entrevistador_fecha }}</b><br>
 
-        <h2 class="w-100 text-center text-uppercase">RELEVAMIENTO SOCIAL</h2>
+    <h2 class="w-100 text-center text-uppercase">RELEVAMIENTO SOCIAL</h2>
 
-        <h3>Cantidad de integrantes de la familia</h3>
-        Personas en el hogar: <b>{{ f.jefe_personas_en_hogar }}</b><br>
-        Cantidad de hogares: <b>{{ f.cantidad_hogares }}</b><br>
-        Numero de hogar: <b>{{ f.numero_de_hogar }}</b><br>
+    <h3>Cantidad de integrantes de la familia</h3>
+    Personas en el hogar: <b>{{ f.jefe_personas_en_hogar }}</b><br>
+    Cantidad de hogares: <b>{{ f.cantidad_hogares }}</b><br>
+    Numero de hogar: <b>{{ f.numero_de_hogar }}</b><br>
 
-        <h3>Sobre el niño/a</h3>
-        <ul>
-            <li>Apellido: <b>{{ f.nino_apellido }}</b></li>
-            <li>Nombre: <b>{{ f.nino_nombre }}</b></li>
-            <li>Tipo de documento: <b>{{ f.nino_tipo_documento }}</b></li>
-            <li>Número de documento: <b>{{ f.nino_numero_documento }}</b></li>
-        </ul>
+    <h3>Sobre el niño/a</h3>
+    <ul>
+        <li>Apellido: <b>{{ f.nino_apellido }}</b></li>
+        <li>Nombre: <b>{{ f.nino_nombre }}</b></li>
+        <li>Tipo de documento: <b>{{ f.nino_tipo_documento }}</b></li>
+        <li>Número de documento: <b>{{ f.nino_numero_documento }}</b></li>
+    </ul>
 
-            <h3 class="w-100">Datos del grupo familiar</h3>
+    <h3 class="w-100">Datos del grupo familiar</h3>
 
     <table class="table">
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">Orden</th>
-      <th scope="col">Nombre y Apellido</th>
-      <th scope="col">Documento de identidad</th>
-      <th scope="col">Identidad de genero</th>
-      <th scope="col">Parentezco c/jefe familia</th>
-      <th scope="col">Estado civil</th>
-      <th scope="col">Estudios alcanzados</th>
-      <th scope="col">Trabajo remunerado</th>
-      <th scope="col">Trabajo que desempeña</th>
-      <th scope="col">Ingresos por trabajo</th>
-      <th scope="col">Otros ingresos</th>
-      <th scope="col">Cobertura de salud</th>
-      <th scope="col">Discapacidad</th>
-      <th scope="col">Enf. Crónica</th>
-      <th scope="col">Embarazo en curso</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>{{ f.nino_apellido }} {{ f.nino_nombre }} <i class="fa fa-child"></i></td>
-      <td>{{ f.nino_numero_documento }}</td>
-      <td>Varón</td>
-      <td>Hijo</td>
-      <td>-</td>
-      <td>-</td>
-      <td>-</td>
-      <td>-</td>
-      <td>-</td>
-      <td>-</td>
-      <td>-</td>
-      <td>-</td>
-      <td>-</td>
-      <td>-</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Melania Uribe</td>
-      <td>2153728</td>
-      <td>Mujer</td>
-      <td>Conyuge</td>
-      <td>Soltero</td>
-      <td>Secundario</td>
-      <td>Informal</td>
-      <td>Empleada doméstica</td>
-      <td>$15,000</td>
-      <td>AUH, Tarjeta alimentar</td>
-      <td>No posee</td>
-      <td>No</td>
-      <td>No</td>
-      <td>Si</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>Juan Perez</td>
-      <td>2731728</td>
-      <td>Varón</td>
-      <td>Hijo</td>
-      <td>Soltero</td>
-      <td>Primario</td>
-      <td>Desocupado</td>
-      <td>Nada</td>
-      <td>Nada</td>
-      <td>Nada</td>
-      <td>No posee</td>
-      <td>No</td>
-      <td>No</td>
-      <td>No</td>
-    </tr>
-  </tbody>
-</table>
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Orden</th>
+            <th scope="col">Nombre y Apellido</th>
+            <th scope="col">Documento de identidad</th>
+            <th scope="col">Identidad de genero</th>
+            <th scope="col">Parentezco c/jefe familia</th>
+            <th scope="col">Estado civil</th>
+            <th scope="col">Estudios alcanzados</th>
+            <th scope="col">Trabajo remunerado</th>
+            <th scope="col">Trabajo que desempeña</th>
+            <th scope="col">Ingresos por trabajo</th>
+            <th scope="col">Otros ingresos</th>
+            <th scope="col">Cobertura de salud</th>
+            <th scope="col">Discapacidad</th>
+            <th scope="col">Enf. Crónica</th>
+            <th scope="col">Embarazo en curso</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th scope="row">1</th>
+            <td>{{ f.nino_apellido }} {{ f.nino_nombre }} <i class="fa fa-child"></i></td>
+            <td>{{ f.nino_numero_documento }}</td>
+            <td>Varón</td>
+            <td>Hijo</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <th scope="row">2</th>
+            <td>Melania Uribe</td>
+            <td>2153728</td>
+            <td>Mujer</td>
+            <td>Conyuge</td>
+            <td>Soltero</td>
+            <td>Secundario</td>
+            <td>Informal</td>
+            <td>Empleada doméstica</td>
+            <td>$15,000</td>
+            <td>AUH, Tarjeta alimentar</td>
+            <td>No posee</td>
+            <td>No</td>
+            <td>No</td>
+            <td>Si</td>
+        </tr>
+        <tr>
+            <th scope="row">3</th>
+            <td>Juan Perez</td>
+            <td>2731728</td>
+            <td>Varón</td>
+            <td>Hijo</td>
+            <td>Soltero</td>
+            <td>Primario</td>
+            <td>Desocupado</td>
+            <td>Nada</td>
+            <td>Nada</td>
+            <td>Nada</td>
+            <td>No posee</td>
+            <td>No</td>
+            <td>No</td>
+            <td>No</td>
+        </tr>
+        </tbody>
+    </table>
 
-        <h2 class="w-100 text-uppercase text-center">RELEVAMIENTO FISICO-AMBIENTAL</h2>
+    <h2 class="w-100 text-uppercase text-center">RELEVAMIENTO FISICO-AMBIENTAL</h2>
 
-        <h3>Sobre la vivienda</h3>
+    <!-- Renderizar lista -->
+    <ul>
+        {% for q in qa %}
+            <!-- Titulos de categorias -->
+                {% if q.q == 'Baño' %}
+                <h3>Baño</h3>
+                {% elif q.q == '¿Dispone de un espacio para cocinar/comer?' %}
+                <h3>Cocina</h3>
+                {% elif q.q == 'Tenencia' %}
+                <h3>Sobre la vivienda</h3>
+                {% elif q.q == '¿Dispone de un espacio para cocinar/comer?' %}
+                <h3>Cocina</h3>
+                {% elif q.q == 'Servicios / Agua potable' %}
+                <h3>Servicios</h3>
+                {% endif %}
 
-        <ul>
-            <li>Tenencia: <b>Propietario</b></li>
-<li>Tipo de vivienda: <b>Casa</b></li>
-<li>Pisos: <b>Cerámico/Mosaico/Estucado</b></li>
-<li>Paredes: <b>Revocada</b></li>
-<li>Condiciones de paredes: <b>Buenas condiciones</b></li>
-<li>Techos: <b>Losa</b></li>
-<li>Condiciones del techo: <b>Buenas condiciones</b></li>
-<li>Ambientes de la vivienda: <b>3 ambientes</b></li>
-<li>Cantidad de dormitorios: <b>2 dormitorios</b></li>
-<li>Cantidad de camas: <b>3 camas</b></li>
-        </ul>
+            <!-- Nombre del item -->
+            <li>{{ q.q }}: <b>{{ q.a }}</b></li>
 
-    <h3>Baño</h3>
-        <ul>
-            <li>Posee baño: <b>Si</b></li>
-            <li>Inodoro: <b>Si / Adecuado</b></li>
-            <li>Ducha: <b>Si / Inadecuado</b></li>
-            <img src="https://thumbs.dreamstime.com/z/ducha-rota-terrible-y-sucia-en-un-hotel-barato-114694251.jpg" width="200px">
-            <li>Bacha: <b>No</b></li>
-        </ul>
+            <!-- Imagen -->
+            {% if q.img %}
+                <img src="{{ q.img.url }}" alt="" width="200px">
+            {% endif %}
 
-        <h3>Cocina</h3>
-        <ul>
-            <li>Heladera: <b>Si / Adecuado</b>
-            </li>
-            <li>Cocina: <b>Si / Inadecuado</b></li>
-            <img src="https://http2.mlstatic.com/D_NQ_NP_622321-MLA44180027428_112020-W.jpg" width="200px">
-            <li>Mesa: <b>No</b></li>
-            <li>Sillas: <b>Si / Adecuado</b></li>
-            <li>Vajillas/Cubiertos: <b>Si / Adecuado</b></li>
-            <li>Bacha de cocina: <b>Si / Adecuado</b></li>
-            <li>Mesada para preparar alimentos: <b>Si / Adecuado</b></li>
-            <li>Espacio para guardar alimentos: <b>Si / Adecuado</b></li>
-        </ul>
+        {% endfor %}
+    </ul>
 
-        <h3>Servicios</h3>
-
-
-            <h2 class="text-uppercase w-100 text-center">Conclusiones generales y sugerencias de intervención</h2>
+    <h2 class="text-uppercase w-100 text-center">Conclusiones generales y sugerencias de intervención</h2>
 
     <textarea rows="10" class="w-100">
     </textarea>
@@ -194,9 +180,9 @@
         <div class="col-4">DNI</div>
     </div>
 
-    </div>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
