@@ -254,6 +254,7 @@ class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=200)
     choice_image = models.ImageField(null=True, blank=True)
+    next_question = models.IntegerField(verbose_name="Indice de prox. pregunta", default=-1)
 
 
 # Cada respuesta esta ligada a un beneficiario y a un usuario. También dice de que pregunta es,

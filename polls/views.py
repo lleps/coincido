@@ -499,12 +499,37 @@ def vote(request, pk, question_id):
 
         answer.save()
 
+        # Ver si tengo que saltear preguntas
+        choices = Choice.objects.filter(question=question)
+        next_question = question_id + 1
+        if 0 <= int(selected_choice) < len(choices):
+            choice = choices[int(selected_choice)]
+            if choice.next_question != -1:
+                # responder con choice -1 desde: la siguiente,
+                # hasta la que saltea.
+                counter = question_id + 1
+                while counter < choice.next_question:
+                    # ir creando respuestas
+                    q = questions[counter]
+                    try:
+                        answer = Answer.objects.get(user=request.user, beneficiario=beneficiario, question=q)
+                    except Answer.DoesNotExist:
+                        answer = Answer.objects.create(user=request.user, beneficiario=beneficiario, question=q)
+
+                    logger.info("answer question idx " + str(counter) + " to 99.")
+                    answer.choice = 99
+                    answer.save()
+                    counter += 1
+
+                next_question = choice.next_question
+
+
         logger.info("Selected choice: user " + request.user.username +
                     " question " + question.question_text +
                     " choice: " + selected_choice)
 
-        if question_id + 1 < len(questions):  # redirect to next question
-            return HttpResponseRedirect(reverse('polls:detail', args=(pk, question_id + 1,)))
+        if next_question < len(questions):  # redirect to next question
+            return HttpResponseRedirect(reverse('polls:detail', args=(pk, next_question,)))
         else:  # no more questions, redirect to home
             return HttpResponseRedirect(reverse('polls:index'))
 
