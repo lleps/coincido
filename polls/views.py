@@ -223,7 +223,9 @@ def grupofamiliar_post_conv(request, pk):
     return render(request, 'polls/grupofamiliar.html', {
         'conv_form': conv_form,
         'no_conv_form': no_conv_form,
-        'pk': pk
+        'pk': pk,
+        'convivientes': MiembroConviviente.objects.filter(beneficiario=beneficiario),
+        'no_convivientes': MiembroNoConviviente.objects.filter(beneficiario=beneficiario),
     })
 
 
@@ -247,7 +249,9 @@ def grupofamiliar_post_no_conv(request, pk):
     return render(request, 'polls/grupofamiliar.html', {
         'conv_form': conv_form,
         'no_conv_form': no_conv_form,
-        'pk': pk
+        'pk': pk,
+        'convivientes': MiembroConviviente.objects.filter(beneficiario=beneficiario),
+        'no_convivientes': MiembroNoConviviente.objects.filter(beneficiario=beneficiario),
     })
 
 
@@ -265,7 +269,9 @@ def grupofamiliar(request, pk):
         return render(request, 'polls/grupofamiliar.html', {
             'conv_form': conv_form,
             'no_conv_form': no_conv_form,
-            'pk': pk
+            'pk': pk,
+            'convivientes': MiembroConviviente.objects.filter(beneficiario=beneficiario),
+            'no_convivientes': MiembroNoConviviente.objects.filter(beneficiario=beneficiario),
         })
 
 

@@ -5,30 +5,30 @@
 {% block content %}
 
     <style>
-    input[type=text], input[type=number] {
-        display: block;
-    width: 100%;
-    height: calc(1.5em + .75rem + 2px);
-    padding: .375rem .75rem;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #495057;
-    background-color: #fff;
-    background-clip: padding-box;
-    border: 1px solid #ced4da;
-    border-radius: .25rem;
-    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-    }
+        input[type=text], input[type=number] {
+            display: block;
+            width: 100%;
+            height: calc(1.5em + .75rem + 2px);
+            padding: .375rem .75rem;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #ced4da;
+            border-radius: .25rem;
+            transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+        }
 
-    select, textarea {
-        width: 100%;
-    }
+        select, textarea {
+            width: 100%;
+        }
 
-    h3 {
-        margin-top: 30px;
-        margin-bottom: 30px;
-    }
+        h3 {
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
     </style>
 
     {% if error %}<p><strong class="text-danger">{{ error }}</strong></p>{% endif %}
@@ -37,7 +37,52 @@
         <form action="{% url 'polls:grupofamiliar_post_conv' pk %}" method="post">
             {% csrf_token %}
 
-        <h3>Agregar grupo familiar conviviente</h3>
+            <h1 class="pt-3">Grupo familiar conviviente</h1>
+
+            <div style="overflow: auto">
+                <table class="table">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Apellido</th>
+                        <th scope="col">Documento</th>
+                        <th scope="col">Edad</th>
+                        <th scope="col">Identidad de género</th>
+                        <th scope="col">Parentezco c/jefe/a flia</th>
+                        <th scope="col">Estado civil</th>
+                        <th scope="col">Estudios alcanzados</th>
+                        <th scope="col">Trabajo remunerado</th>
+                        <th scope="col">Otros ingresos</th>
+                        <th scope="col">Cobertura de salud</th>
+                        <th scope="col">Discapacidad</th>
+                        <th scope="col">Enf. Crónica</th>
+                        <th scope="col">Embarazo en curso</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for f in convivientes %}
+                        <tr>
+                            <th scope="row">{{ f.nombre }}</th>
+                            <td>{{ f.apellido }}</td>
+                            <td>{{ f.tipo_documento }} {{ f.numero_de_documento }}</td>
+                            <td>{{ f.edad }}</td>
+                            <td>{{ f.identidad_de_genero }}</td>
+                            <td>{{ f.parentesco }}</td>
+                            <td>{{ f.estado_civil }}</td>
+                            <td>{{ f.estudios_alcanzados }}</td>
+                            <td>{{ f.trabajo_remunerado }}</td>
+                            <td>{{ f.otros_ingresos }}</td>
+                            <td>{{ f.cobertura_de_salud }}</td>
+                            <td>{{ f.discapacidad }} ({{ f.certificado_de_discapacidad }})</td>
+                            <td>{{ f.enfermedad_cronica }}</td>
+                            <td>{{ f.embarazo_en_curso|yesno:"Si,No" }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Agregar grupo familiar conviviente</h3>
             {% for field in conv_form %}
                 <div class="form-group">
                     {{ field.label_tag }}
@@ -46,7 +91,7 @@
                     {% endif %}
                     {{ field }}
                     <div class="text-danger">
-                    {{ field.errors }}
+                        {{ field.errors }}
                     </div>
                 </div>
             {% endfor %}
@@ -54,10 +99,34 @@
             <button type="submit" class="btn btn-primary btn-block">Agregar</button>
         </form>
 
-        <form action="{% url 'polls:grupofamiliar_post_no_conv' pk %}" method="post">
-        {% csrf_token %}
+        <h1 class="pt-3">Grupo familiar no conviviente</h1>
 
-        <h3>Agregar miembro familiar no conviviente</h3>
+        <div style="overflow: auto">
+            <table class="table">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Apellido</th>
+                    <th scope="col">Observaciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for f in convivientes %}
+                    <tr>
+                        <th scope="row">{{ f.nombre }}</th>
+                        <td>{{ f.apellido }}</td>
+                        <td>{{ f.observaciones }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <form action="{% url 'polls:grupofamiliar_post_no_conv' pk %}" method="post">
+            {% csrf_token %}
+
+
+            <h3>Agregar miembro familiar no conviviente</h3>
             {% for field in no_conv_form %}
                 <div class="form-group">
                     {{ field.label_tag }}
@@ -66,7 +135,7 @@
                     {% endif %}
                     {{ field }}
                     <div class="text-danger">
-                    {{ field.errors }}
+                        {{ field.errors }}
                     </div>
                 </div>
             {% endfor %}
