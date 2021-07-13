@@ -78,6 +78,7 @@ class Beneficiario(models.Model):
     inm_departamento = models.CharField(max_length=100, help_text="Departament", default="")
     inm_lat = models.DecimalField(max_digits=22, decimal_places=16, blank=True, default=0)
     inm_lng = models.DecimalField(max_digits=22, decimal_places=16, blank=True, default=0)
+    inm_codigo_postal = models.CharField(max_length=60, default="")
 
     # entrevista efectiva
     ENTREVISTA_EFECTIVA_CHOICES = [

@@ -228,6 +228,7 @@ class AgregarBeneficiarioForm(forms.Form):
     numero = forms.IntegerField()
     barrio = forms.CharField(max_length=128)
     localidad = forms.CharField(max_length=128)
+    codigo_postal = forms.CharField(max_length=50)
     departamento = forms.CharField(max_length=128)
 
     # entrevista efectiva o no
@@ -255,6 +256,7 @@ def beneficiario(request):
                 inm_barrio=data['barrio'],
                 inm_localidad=data['localidad'],
                 inm_departamento=data['departamento'],
+                inm_codigo_postal=data['codigo_postal'],
                 inm_lat=0,
                 inm_lng=0,
                 entrevista_efectiva=data['entrevista_efectiva'],
