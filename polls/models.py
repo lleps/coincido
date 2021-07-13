@@ -61,6 +61,44 @@ class BeneficiarioFamilia(models.Model):
     nino_numero_documento = models.IntegerField()
 
 
+# sobre quien es la encuesta.
+class Beneficiario(models.Model):
+    # usuario que registro el beneficiario
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    # entrevistador
+    entrevistador_nombre_apellido = models.CharField(max_length=100, help_text="Nombre y apellido del entrevistador",
+                                                     default="")
+    entrevistador_fecha = models.DateField(help_text="Fecha", auto_now_add=True)
+
+    # datos generales del inmueble
+    inm_calle = models.CharField(max_length=256, help_text="Calle", default="")
+    inm_numero = models.IntegerField(help_text="Número", default=0)
+    inm_barrio = models.CharField(max_length=256, help_text="Barrio", default="")
+    inm_localidad = models.CharField(max_length=100, help_text="Localidad", default="")
+    inm_departamento = models.CharField(max_length=100, help_text="Departament", default="")
+    inm_lat = models.DecimalField(max_digits=22, decimal_places=16, blank=True, default=0)
+    inm_lng = models.DecimalField(max_digits=22, decimal_places=16, blank=True, default=0)
+    inm_codigo_postal = models.CharField(max_length=60, default="")
+
+    # entrevista efectiva
+    ENTREVISTA_EFECTIVA_CHOICES = [
+        ('si', 'Si'),
+        ('rechazo', 'No: Rechazo'),
+        ('lote-baldio', 'No: Lote Baldío'),
+        ('se-mudo', 'No: Se mudó'),
+        ('otros', 'No: Otros'),
+    ]
+    entrevista_efectiva = models.CharField(choices=ENTREVISTA_EFECTIVA_CHOICES, max_length=100)
+
+    # beneficiario familia
+    familia = models.OneToOneField(
+        BeneficiarioFamilia,
+        on_delete=models.CASCADE,
+        null=True,
+    )
+
+
 # Define un conviviente de un beneficiario
 class MiembroConviviente(models.Model):
     ESTADO_CIVIL_CHOICES = [
@@ -137,6 +175,7 @@ class MiembroConviviente(models.Model):
         ('No', 'No'),
     ]
 
+    beneficiario = models.ForeignKey(Beneficiario, on_delete=models.CASCADE, null=True)
     nombre = models.CharField(max_length=100)
     apellido = models.CharField(max_length=100)
     tipo_de_documento = models.CharField(max_length=100, choices=TIPO_DOCUMENTO_CHOICES)
@@ -156,47 +195,10 @@ class MiembroConviviente(models.Model):
 
 
 class MiembroNoConviviente(models.Model):
+    beneficiario = models.ForeignKey(Beneficiario, on_delete=models.CASCADE, null=True)
     nombre = models.CharField(max_length=100)
     apellido = models.CharField(max_length=100)
     observaciones = models.CharField(max_length=100, default="")
-
-
-# sobre quien es la encuesta.
-class Beneficiario(models.Model):
-    # usuario que registro el beneficiario
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    # entrevistador
-    entrevistador_nombre_apellido = models.CharField(max_length=100, help_text="Nombre y apellido del entrevistador",
-                                                     default="")
-    entrevistador_fecha = models.DateField(help_text="Fecha", auto_now_add=True)
-
-    # datos generales del inmueble
-    inm_calle = models.CharField(max_length=256, help_text="Calle", default="")
-    inm_numero = models.IntegerField(help_text="Número", default=0)
-    inm_barrio = models.CharField(max_length=256, help_text="Barrio", default="")
-    inm_localidad = models.CharField(max_length=100, help_text="Localidad", default="")
-    inm_departamento = models.CharField(max_length=100, help_text="Departament", default="")
-    inm_lat = models.DecimalField(max_digits=22, decimal_places=16, blank=True, default=0)
-    inm_lng = models.DecimalField(max_digits=22, decimal_places=16, blank=True, default=0)
-    inm_codigo_postal = models.CharField(max_length=60, default="")
-
-    # entrevista efectiva
-    ENTREVISTA_EFECTIVA_CHOICES = [
-        ('si', 'Si'),
-        ('rechazo', 'No: Rechazo'),
-        ('lote-baldio', 'No: Lote Baldío'),
-        ('se-mudo', 'No: Se mudó'),
-        ('otros', 'No: Otros'),
-    ]
-    entrevista_efectiva = models.CharField(choices=ENTREVISTA_EFECTIVA_CHOICES, max_length=100)
-
-    # beneficiario familia
-    familia = models.OneToOneField(
-        BeneficiarioFamilia,
-        on_delete=models.CASCADE,
-        null=True,
-    )
 
 
 class Question(models.Model):

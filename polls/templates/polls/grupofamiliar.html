@@ -34,7 +34,7 @@
     {% if error %}<p><strong class="text-danger">{{ error }}</strong></p>{% endif %}
 
     <div class="container">
-        <form action="{% url 'polls:grupofamiliar' pk %}" method="post">
+        <form action="{% url 'polls:grupofamiliar_post_conv' pk %}" method="post">
             {% csrf_token %}
 
         <h3>Agregar grupo familiar conviviente</h3>
@@ -54,8 +54,8 @@
             <button type="submit" class="btn btn-primary btn-block">Agregar</button>
         </form>
 
-            <form action="{% url 'polls:grupofamiliar' pk %}" method="post">
-            {% csrf_token %}
+        <form action="{% url 'polls:grupofamiliar_post_no_conv' pk %}" method="post">
+        {% csrf_token %}
 
         <h3>Agregar miembro familiar no conviviente</h3>
             {% for field in no_conv_form %}

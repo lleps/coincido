@@ -169,12 +169,14 @@ class MiembroConvivienteForm(forms.ModelForm):
     class Meta:
         model = MiembroConviviente
         fields = '__all__'
+        exclude = ['beneficiario']
 
 
 class MiembroNoConvivienteForm(forms.ModelForm):
     class Meta:
         model = MiembroNoConviviente
         fields = '__all__'
+        exclude = ['beneficiario']
 
 
 class FamiliaForm(forms.ModelForm):
@@ -199,6 +201,54 @@ class FamiliaForm(forms.ModelForm):
             'nino_tipo_documento': 'Tipo de documento',
             'nino_numero_documento': 'Número de documento',
         }
+
+
+def grupofamiliar_post_conv(request, pk):
+    beneficiario = get_object_or_404(Beneficiario, pk=pk)
+    no_conv_form = MiembroNoConvivienteForm()
+
+    if request.method == 'POST':
+        conv_form = MiembroConvivienteForm(request.POST)
+
+        # agregado, redireccionar al principal.
+        if conv_form.is_valid():
+            result = conv_form.save()
+            result.beneficiario = beneficiario
+            result.save()
+            return HttpResponseRedirect(reverse("polls:grupofamiliar", args=(pk,)))
+
+    else:
+        conv_form = MiembroConvivienteForm()
+
+    return render(request, 'polls/grupofamiliar.html', {
+        'conv_form': conv_form,
+        'no_conv_form': no_conv_form,
+        'pk': pk
+    })
+
+
+def grupofamiliar_post_no_conv(request, pk):
+    beneficiario = get_object_or_404(Beneficiario, pk=pk)
+    conv_form = MiembroConvivienteForm()
+
+    if request.method == 'POST':
+        no_conv_form = MiembroNoConvivienteForm(request.POST)
+
+        # agregado, redireccionar al principal.
+        if no_conv_form.is_valid():
+            result = no_conv_form.save()
+            result.beneficiario = beneficiario
+            result.save()
+            return HttpResponseRedirect(reverse("polls:grupofamiliar", args=(pk,)))
+
+    else:
+        no_conv_form = MiembroNoConvivienteForm()
+
+    return render(request, 'polls/grupofamiliar.html', {
+        'conv_form': conv_form,
+        'no_conv_form': no_conv_form,
+        'pk': pk
+    })
 
 
 def grupofamiliar(request, pk):
