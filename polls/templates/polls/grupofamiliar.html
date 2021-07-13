@@ -25,6 +25,10 @@
             width: 100%;
         }
 
+        h1 {
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
         h3 {
             margin-top: 30px;
             margin-bottom: 30px;
@@ -34,73 +38,78 @@
     {% if error %}<p><strong class="text-danger">{{ error }}</strong></p>{% endif %}
 
     <div class="container">
-        <form action="{% url 'polls:grupofamiliar_post_conv' pk %}" method="post">
-            {% csrf_token %}
 
-            <h1 class="pt-3">Grupo familiar conviviente</h1>
-
-            <div style="overflow: auto">
-                <table class="table">
-                    <thead class="thead-dark">
+        <!-- Grupo familiar: CONVIVIENTE -->
+        <h1 class="pt-3">Grupo familiar conviviente</h1>
+        <div style="overflow: auto">
+            <table class="table">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Apellido</th>
+                    <th scope="col">Documento</th>
+                    <th scope="col">Edad</th>
+                    <th scope="col">Identidad de género</th>
+                    <th scope="col">Parentezco c/jefe/a flia</th>
+                    <th scope="col">Estado civil</th>
+                    <th scope="col">Estudios alcanzados</th>
+                    <th scope="col">Trabajo remunerado</th>
+                    <th scope="col">Otros ingresos</th>
+                    <th scope="col">Cobertura de salud</th>
+                    <th scope="col">Discapacidad</th>
+                    <th scope="col">Enf. Crónica</th>
+                    <th scope="col">Embarazo en curso</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for f in convivientes %}
                     <tr>
-                        <th scope="col">Nombre</th>
-                        <th scope="col">Apellido</th>
-                        <th scope="col">Documento</th>
-                        <th scope="col">Edad</th>
-                        <th scope="col">Identidad de género</th>
-                        <th scope="col">Parentezco c/jefe/a flia</th>
-                        <th scope="col">Estado civil</th>
-                        <th scope="col">Estudios alcanzados</th>
-                        <th scope="col">Trabajo remunerado</th>
-                        <th scope="col">Otros ingresos</th>
-                        <th scope="col">Cobertura de salud</th>
-                        <th scope="col">Discapacidad</th>
-                        <th scope="col">Enf. Crónica</th>
-                        <th scope="col">Embarazo en curso</th>
+                        <th scope="row">{{ f.nombre }}</th>
+                        <td>{{ f.apellido }}</td>
+                        <td>{{ f.tipo_documento }} {{ f.numero_de_documento }}</td>
+                        <td>{{ f.edad }}</td>
+                        <td>{{ f.identidad_de_genero }}</td>
+                        <td>{{ f.parentesco }}</td>
+                        <td>{{ f.estado_civil }}</td>
+                        <td>{{ f.estudios_alcanzados }}</td>
+                        <td>{{ f.trabajo_remunerado }}</td>
+                        <td>{{ f.otros_ingresos }}</td>
+                        <td>{{ f.cobertura_de_salud }}</td>
+                        <td>{{ f.discapacidad }} ({{ f.certificado_de_discapacidad }})</td>
+                        <td>{{ f.enfermedad_cronica }}</td>
+                        <td>{{ f.embarazo_en_curso|yesno:"Si,No" }}</td>
                     </tr>
-                    </thead>
-                    <tbody>
-                    {% for f in convivientes %}
-                        <tr>
-                            <th scope="row">{{ f.nombre }}</th>
-                            <td>{{ f.apellido }}</td>
-                            <td>{{ f.tipo_documento }} {{ f.numero_de_documento }}</td>
-                            <td>{{ f.edad }}</td>
-                            <td>{{ f.identidad_de_genero }}</td>
-                            <td>{{ f.parentesco }}</td>
-                            <td>{{ f.estado_civil }}</td>
-                            <td>{{ f.estudios_alcanzados }}</td>
-                            <td>{{ f.trabajo_remunerado }}</td>
-                            <td>{{ f.otros_ingresos }}</td>
-                            <td>{{ f.cobertura_de_salud }}</td>
-                            <td>{{ f.discapacidad }} ({{ f.certificado_de_discapacidad }})</td>
-                            <td>{{ f.enfermedad_cronica }}</td>
-                            <td>{{ f.embarazo_en_curso|yesno:"Si,No" }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
-            <h3>Agregar grupo familiar conviviente</h3>
-            {% for field in conv_form %}
-                <div class="form-group">
-                    {{ field.label_tag }}
-                    {% if field.help_text %}
-                        <p class="text-muted">{{ field.help_text|safe }}</p>
-                    {% endif %}
-                    {{ field }}
-                    <div class="text-danger">
-                        {{ field.errors }}
+        <!-- Agregar conviviente -->
+        <button class="btn btn-block btn-outline-success mt-3" data-toggle="collapse" data-target="#collapse1"><i class="fa fa-arrow-down"></i> Agregar familiar conviviente</button>
+        <div class="collapse card p-3" style="background: lightgray" id="collapse1">
+            <form action="{% url 'polls:grupofamiliar_post_conv' pk %}" method="post">
+                <p>Rellene los campos para agregar un miembro familiar conviviente.</p>
+                {% csrf_token %}
+                {% for field in conv_form %}
+                    <div class="form-group">
+                        {{ field.label_tag }}
+                        {% if field.help_text %}
+                            <p class="text-muted">{{ field.help_text|safe }}</p>
+                        {% endif %}
+                        {{ field }}
+                        <div class="text-danger">
+                            {{ field.errors }}
+                        </div>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
 
-            <button type="submit" class="btn btn-primary btn-block">Agregar</button>
-        </form>
+                <button type="submit" class="btn btn-success btn-block">Agregar</button>
+            </form>
+        </div>
 
+    <hr>
+        <!-- Lista NO CONVIVIENTE -->
         <h1 class="pt-3">Grupo familiar no conviviente</h1>
-
         <div style="overflow: auto">
             <table class="table">
                 <thead class="thead-dark">
@@ -111,7 +120,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for f in convivientes %}
+                {% for f in no_convivientes %}
                     <tr>
                         <th scope="row">{{ f.nombre }}</th>
                         <td>{{ f.apellido }}</td>
@@ -122,26 +131,29 @@
             </table>
         </div>
 
-        <form action="{% url 'polls:grupofamiliar_post_no_conv' pk %}" method="post">
-            {% csrf_token %}
+        <!-- Agregar no conviviente -->
+        <button class="btn btn-block btn-outline-success mt-3" data-toggle="collapse" data-target="#collapse2"><i class="fa fa-arrow-down"></i> Agregar familiar no conviviente</button>
 
-
-            <h3>Agregar miembro familiar no conviviente</h3>
-            {% for field in no_conv_form %}
-                <div class="form-group">
-                    {{ field.label_tag }}
-                    {% if field.help_text %}
-                        <p class="text-muted">{{ field.help_text|safe }}</p>
-                    {% endif %}
-                    {{ field }}
-                    <div class="text-danger">
-                        {{ field.errors }}
+        <div class="collapse card p-3" style="background: lightgray" id="collapse2">
+            <form action="{% url 'polls:grupofamiliar_post_no_conv' pk %}" method="post">
+                <p>Rellene los campos para agregar un miembro familiar no conviviente.</p>
+                {% csrf_token %}
+                {% for field in no_conv_form %}
+                    <div class="form-group">
+                        {{ field.label_tag }}
+                        {% if field.help_text %}
+                            <p class="text-muted">{{ field.help_text|safe }}</p>
+                        {% endif %}
+                        {{ field }}
+                        <div class="text-danger">
+                            {{ field.errors }}
+                        </div>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
 
-            <button type="submit" class="btn btn-primary btn-block">Agregar</button>
-        </form>
+                <button type="submit" class="btn btn-success btn-block">Agregar</button>
+            </form>
+        </div>
     </div>
 
 {% endblock %}
