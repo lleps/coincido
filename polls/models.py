@@ -61,6 +61,106 @@ class BeneficiarioFamilia(models.Model):
     nino_numero_documento = models.IntegerField()
 
 
+# Define un conviviente de un beneficiario
+class MiembroConviviente(models.Model):
+    ESTADO_CIVIL_CHOICES = [
+        ('soltero', 'SOLTERO/A'),
+        ('casado', 'CASADO/A'),
+        ('divorciado', 'DIVORCIADO/A'),
+        ('en-pareja', 'EN PAREJA/CONCUBINATO'),
+        ('separado', 'SEPARADO/A DE HECHO'),
+        ('viudo', 'VIUDO/A'),
+    ]
+    TIPO_DOCUMENTO_CHOICES = [
+        ('libreta-civica', 'Libreta Civica'),
+        ('libreta-de-enrolamiento', 'Libreta De enrolamiento'),
+        ('dni', 'DNI'),
+        ('doc-extranjero', 'Doc. Extranjero'),
+        ('nunca-tuvo', 'Nunca Tuvo'),
+        ('otro', 'Otro'),
+    ]
+    IDENTIDAD_DE_GENERO_CHOICES = [
+        ('Mujer', 'Mujer'),
+        ('Varón', 'Varón'),
+        ('Disidencia', 'Disidencia'),
+    ]
+    PARENTESCO_CHOICES = [
+        ('Jefe', 'Jefe'),
+        ('Cónyuge/pareja', 'Cónyuge/pareja'),
+        ('Hijo/a', 'Hijo/a'),
+        ('Yerno/nuera', 'Yerno/nuera'),
+        ('Nieto/a', 'Nieto/a'),
+        ('Padre/madre', 'Padre/madre'),
+        ('Suegro/a', 'Suegro/a'),
+        ('Otro familiar', 'Otro familiar'),
+        ('No familiar', 'No familiar'),
+    ]
+    TRABAJO_REMUNERADO_CHOICES = [
+        ('Formal', 'Formal'),
+        ('Informal', 'Informal'),
+        ('Autónomo', 'Autónomo'),
+        ('Jubilación/retiro', 'Jubilación/retiro'),
+        ('Desocupado', 'Desocupado'),
+    ]
+    OTROS_INGRESOS_CHOICES = [
+        ('AUH', 'AUH'),
+        ('AUE', 'AUE'),
+        ('Tarjeta Alimentar', 'Tarjeta Alimentar'),
+        ('Potenciar Inclusión Joven', 'Potenciar Inclusión Joven'),
+        ('Argentina Hace', 'Argentina Hace'),
+        ('Potenciar Trabajo', 'Potenciar Trabajo'),
+        ('Fondo Desempleo', 'Fondo Desempleo'),
+        ('Pensión Madre de 7 hijos', 'Pensión Madre de 7 hijos'),
+        ('Pensión por discapacidad', 'Pensión por discapacidad'),
+        ('IFE', 'IFE'),
+        ('Otros', 'Otros'),
+    ]
+    COBERTURA_DE_SALUD_CHOICES = [
+        ('No posee', 'No posee'),
+        ('Pre paga', 'Pre paga'),
+        ('APROSS', 'APROSS'),
+        ('PAMI', 'PAMI'),
+        ('PROFE', 'PROFE'),
+        ('Otros', 'Otros'),
+    ]
+    DISCAPACIDAD_CHOICES = [
+        ('No', 'No'),
+        ('Motriz', 'Motriz'),
+        ('Intelectual', 'Intelectual'),
+        ('Sensorial', 'Sensorial'),
+        ('Multidiscapacidad', 'Multidiscapacidad'),
+    ]
+    CERTIFICADO_DE_DISCAPACIDAD_CHOICES = [
+        ('Si, Vigente', 'Si, Vigente'),
+        ('Si, No vigente', 'Si, No Vigente'),
+        ('En trámite', 'En trámite'),
+        ('No', 'No'),
+    ]
+
+    nombre = models.CharField(max_length=100)
+    apellido = models.CharField(max_length=100)
+    tipo_de_documento = models.CharField(max_length=100, choices=TIPO_DOCUMENTO_CHOICES)
+    numero_de_documento = models.IntegerField()
+    edad = models.IntegerField()
+    identidad_de_genero = models.CharField(max_length=80, verbose_name="Identidad de género", choices=IDENTIDAD_DE_GENERO_CHOICES)
+    parentesco = models.CharField(max_length=80, verbose_name="Parentezco c/jefe/a flia", choices=PARENTESCO_CHOICES)
+    estado_civil = models.CharField(max_length=80, verbose_name="Estado civíl", choices=PARENTESCO_CHOICES)
+    estudios_alcanzados = models.CharField(verbose_name="Estudios alcanzados", max_length=50)
+    trabajo_remunerado = models.CharField(max_length=80, choices=TRABAJO_REMUNERADO_CHOICES)
+    otros_ingresos = models.CharField(max_length=80, choices=OTROS_INGRESOS_CHOICES)
+    cobertura_de_salud = models.CharField(max_length=80, choices=COBERTURA_DE_SALUD_CHOICES)
+    discapacidad = models.CharField(max_length=80, choices=DISCAPACIDAD_CHOICES)
+    certificado_de_discapacidad = models.CharField(max_length=80, choices=CERTIFICADO_DE_DISCAPACIDAD_CHOICES, default="No")
+    enfermedad_cronica = models.CharField(max_length=80, verbose_name="Enf. Crónica", default="No")
+    embarazo_en_curso = models.BooleanField(default=False)
+
+
+class MiembroNoConviviente(models.Model):
+    nombre = models.CharField(max_length=100)
+    apellido = models.CharField(max_length=100)
+    observaciones = models.CharField(max_length=100, default="")
+
+
 # sobre quien es la encuesta.
 class Beneficiario(models.Model):
     # usuario que registro el beneficiario

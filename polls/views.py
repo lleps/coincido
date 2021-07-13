@@ -165,6 +165,18 @@ def resumen(request, user_index):
     return render(request, 'polls/resumen.html', context)
 
 
+class MiembroConvivienteForm(forms.ModelForm):
+    class Meta:
+        model = MiembroConviviente
+        fields = '__all__'
+
+
+class MiembroNoConvivienteForm(forms.ModelForm):
+    class Meta:
+        model = MiembroNoConviviente
+        fields = '__all__'
+
+
 class FamiliaForm(forms.ModelForm):
     class Meta:
         model = BeneficiarioFamilia
@@ -189,6 +201,24 @@ class FamiliaForm(forms.ModelForm):
         }
 
 
+def grupofamiliar(request, pk):
+    beneficiario = get_object_or_404(Beneficiario, pk=pk)
+
+    if request.method == 'POST':
+        # guardado
+        return HttpResponseRedirect(reverse("polls:grupofamiliar"))
+
+    else:
+        conv_form = MiembroConvivienteForm()
+        no_conv_form = MiembroNoConvivienteForm()
+
+        return render(request, 'polls/grupofamiliar.html', {
+            'conv_form': conv_form,
+            'no_conv_form': no_conv_form,
+            'pk': pk
+        })
+
+
 def familia(request, pk):
     beneficiario = get_object_or_404(Beneficiario, pk=pk)
 
@@ -205,6 +235,7 @@ def familia(request, pk):
         return render(request, 'polls/familia.html', {'form': form, 'pk': pk})
 
     else:
+        # obtener grupo familiar final
         form = FamiliaForm()
 
         return render(request, 'polls/familia.html', {'form': form, 'pk': pk})

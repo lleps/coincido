@@ -50,6 +50,10 @@
                                 <span class="text-success"><i class="fa fa-check"></i> Familia</span>
                             {% endif %}
 
+                            <a href="grupofamiliar/{{ match.id }}" class="btn btn-sm btn-primary mr-3">
+                                Rellenar (Grupo familiar)
+                            </a>
+
                             <!-- Completar datos de la vivienda -->
                             {% if not match.completoEncuesta %}
                                 <a href="/{{ match.id }}/0" class="btn btn-sm btn-primary mr-3">
