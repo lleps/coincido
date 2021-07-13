@@ -179,6 +179,7 @@ class FamiliaForm(forms.ModelForm):
             'jefe_telefono': 'Teléfono fijo/celular',
             'jefe_contacto': 'Otro teléfono/s o formas de contactarse',
             'jefe_estado_civil': 'Estado civil',
+            'jefe_nacionalidad': 'Nacionalidad',
             'jefe_personas_en_hogar': 'Cuantas personas viven en este hogar',
             'jefe_fecha_nacimiento': 'Fecha de nacimiento',
             'nino_nombre': 'Nombre del niño/a',

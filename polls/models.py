@@ -51,6 +51,7 @@ class BeneficiarioFamilia(models.Model):
     jefe_telefono = models.CharField(max_length=50)
     jefe_contacto = models.CharField(max_length=100)
     jefe_estado_civil = models.CharField(max_length=100, choices=ESTADO_CIVIL_CHOICES)
+    jefe_nacionalidad = models.CharField(max_length=120)
     jefe_personas_en_hogar = models.IntegerField()
 
     # datos del niño/a
