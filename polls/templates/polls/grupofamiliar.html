@@ -162,4 +162,15 @@
         </div>
     </div>
 
+    <hr>
+    <form action="{% url 'polls:grupofamiliar_terminar' pk %}" method="post">
+
+        {% csrf_token %}
+        <p class="pt-5">
+        Cuando termine de registrar todo el grupo familiar, toque debajo para dar por hecha la tarea.
+        </p>
+
+        <button type="submit" class="btn btn-warning btn-block"><i class="fa fa-check"></i> Finalizar relevamiento del grupo familiar</button>
+    </form>
+
 {% endblock %}

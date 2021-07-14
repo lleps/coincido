@@ -43,25 +43,32 @@
 
                             <!-- Completar datos de la familia -->
                             {% if not match.completoFamilia %}
-                                <a href="familia/{{ match.id }}" class="btn btn-sm btn-primary mr-3">
+                                <a href="familia/{{ match.id }}" class="btn btn-sm btn-outline-primary mr-3">
                                     Relevamiento Social / Solicitante
                                 </a>
                             {% else %}
                                 <span class="text-success"><i class="fa fa-check"></i> Relevamiento Social / Solicitante</span>
                             {% endif %}
+                            <br>
 
-                            <a href="grupofamiliar/{{ match.id }}" class="btn btn-sm btn-primary mr-3">
-                                Relevamiento Social / Familia
+                            {% if not match.completoGrupoFamiliar %}
+                            <a href="grupofamiliar/{{ match.id }}" class="btn btn-sm btn-outline-primary mr-3">
+                                Relevamiento Social / Grupo familiar
                             </a>
+                            {% else %}
+                                <span class="text-success"><i class="fa fa-check"></i> Relevamiento Social / Grupo familiar</span>
+                            {% endif %}
+                            <br>
 
                             <!-- Completar datos de la vivienda -->
                             {% if not match.completoEncuesta %}
-                                <a href="/{{ match.id }}/0" class="btn btn-sm btn-primary mr-3">
+                                <a href="/{{ match.id }}/0" class="btn btn-sm btn-outline-primary mr-3">
                                     Relevamiento físico/ambiental
                                 </a>
                             {% else %}
                                 <span class="text-success text-sm"><i class="fa fa-check"></i> Relevamiento Físico/Ambiental</span>
                             {% endif %}
+                            <br>
 
                         </span>
                         {% endif %}

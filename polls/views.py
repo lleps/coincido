@@ -68,6 +68,7 @@ def index(request):
             'entrevistaRazon': b.entrevista_efectiva,
             'completoEncuesta': get_first_unanswered_question_index(b, questions) == -1,
             'completoFamilia': b.familia is not None,
+            'completoGrupoFamiliar': b.terminado_datos_familia,
         })
 
     context = {
@@ -221,6 +222,13 @@ def grupofamiliar_post_conv(request, pk):
         'convivientes': MiembroConviviente.objects.filter(beneficiario=beneficiario),
         'no_convivientes': MiembroNoConviviente.objects.filter(beneficiario=beneficiario),
     })
+
+
+def grupofamiliar_terminar(request, pk):
+    beneficiario = get_object_or_404(Beneficiario, pk=pk)
+    beneficiario.terminado_datos_familia = True
+    beneficiario.save()
+    return HttpResponseRedirect(reverse("polls:index"))
 
 
 def grupofamiliar_post_no_conv(request, pk):

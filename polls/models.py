@@ -98,6 +98,7 @@ class Beneficiario(models.Model):
         null=True,
     )
 
+    terminado_datos_familia = models.BooleanField(default=False)
 
 class TipoDePlan(models.Model):
     nombre = models.CharField(max_length=50)
