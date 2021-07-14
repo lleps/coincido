@@ -206,6 +206,7 @@ class Question(models.Model):
     pub_date = models.DateTimeField('date published')
     allow_other = models.BooleanField(verbose_name='Permitir otros', help_text="Permitir opción 'Otros'")
     allow_image = models.BooleanField(verbose_name='Permitir poner una imágen')
+    other_text = models.CharField(max_length=200, default="Otro")
 
     def __str__(self):
         return self.question_text

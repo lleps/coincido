@@ -44,23 +44,23 @@
                             <!-- Completar datos de la familia -->
                             {% if not match.completoFamilia %}
                                 <a href="familia/{{ match.id }}" class="btn btn-sm btn-primary mr-3">
-                                    Rellenar (familia)
+                                    Relevamiento Social / Solicitante
                                 </a>
                             {% else %}
-                                <span class="text-success"><i class="fa fa-check"></i> Familia</span>
+                                <span class="text-success"><i class="fa fa-check"></i> Relevamiento Social / Solicitante</span>
                             {% endif %}
 
                             <a href="grupofamiliar/{{ match.id }}" class="btn btn-sm btn-primary mr-3">
-                                Rellenar (Grupo familiar)
+                                Relevamiento Social / Familia
                             </a>
 
                             <!-- Completar datos de la vivienda -->
                             {% if not match.completoEncuesta %}
                                 <a href="/{{ match.id }}/0" class="btn btn-sm btn-primary mr-3">
-                                    Rellenar (vivienda)
+                                    Relevamiento físico/ambiental
                                 </a>
                             {% else %}
-                                <span class="text-success text-sm"><i class="fa fa-check"></i> Vivienda</span>
+                                <span class="text-success text-sm"><i class="fa fa-check"></i> Relevamiento Físico/Ambiental</span>
                             {% endif %}
 
                         </span>

@@ -122,6 +122,8 @@ def detalle(request, beneficiario_id):
         'b': beneficiario,
         'f': beneficiario.familia,
         'qa': qa,
+        'convivientes': MiembroConviviente.objects.filter(beneficiario=beneficiario),
+        'no_convivientes': MiembroNoConviviente.objects.filter(beneficiario=beneficiario),
     }
     logger.info(context)
     return render(request, "polls/detalle.html", context)

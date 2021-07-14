@@ -1,20 +1,27 @@
-<link rel="stylesheet" href="/static/polls/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<head>
+    <link rel="stylesheet" href="/static/polls/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-<style>
-    body {
-        font-size: 150%;
-    }
-    h2 {
-        background: lightgray;
-        width: 100%;
-        margin-top: 80px;
-        margin-bottom: 40px;
-    }
-    h3 {
-        margin-top: 30px;
-    }
-</style>
+    <style>
+        body {
+        }
+        h2 {
+            background: lightgray;
+            width: 100%;
+            margin-top: 80px;
+            margin-bottom: 40px;
+        }
+        h3 {
+            margin-top: 30px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="">
+
 <img src="/static/polls/header.png" style="width: 100%;
     transform: scale(0.5);
     text-align: left;"/>
@@ -63,21 +70,19 @@
         <li>Número de documento: <b>{{ f.nino_numero_documento }}</b></li>
     </ul>
 
-    <h3 class="w-100">Datos del grupo familiar</h3>
-
+    <h3 class="w-100">Datos del grupo familiar conviviente</h3>
     <table class="table">
         <thead class="thead-dark">
         <tr>
-            <th scope="col">Orden</th>
-            <th scope="col">Nombre y Apellido</th>
-            <th scope="col">Documento de identidad</th>
-            <th scope="col">Identidad de genero</th>
-            <th scope="col">Parentezco c/jefe familia</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Apellido</th>
+            <th scope="col">Documento</th>
+            <th scope="col">Edad</th>
+            <th scope="col">Identidad de género</th>
+            <th scope="col">Parentezco c/jefe/a flia</th>
             <th scope="col">Estado civil</th>
             <th scope="col">Estudios alcanzados</th>
             <th scope="col">Trabajo remunerado</th>
-            <th scope="col">Trabajo que desempeña</th>
-            <th scope="col">Ingresos por trabajo</th>
             <th scope="col">Otros ingresos</th>
             <th scope="col">Cobertura de salud</th>
             <th scope="col">Discapacidad</th>
@@ -86,59 +91,48 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>{{ f.nino_apellido }} {{ f.nino_nombre }} <i class="fa fa-child"></i></td>
-            <td>{{ f.nino_numero_documento }}</td>
-            <td>Varón</td>
-            <td>Hijo</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-        </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>Melania Uribe</td>
-            <td>2153728</td>
-            <td>Mujer</td>
-            <td>Conyuge</td>
-            <td>Soltero</td>
-            <td>Secundario</td>
-            <td>Informal</td>
-            <td>Empleada doméstica</td>
-            <td>$15,000</td>
-            <td>AUH, Tarjeta alimentar</td>
-            <td>No posee</td>
-            <td>No</td>
-            <td>No</td>
-            <td>Si</td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td>Juan Perez</td>
-            <td>2731728</td>
-            <td>Varón</td>
-            <td>Hijo</td>
-            <td>Soltero</td>
-            <td>Primario</td>
-            <td>Desocupado</td>
-            <td>Nada</td>
-            <td>Nada</td>
-            <td>Nada</td>
-            <td>No posee</td>
-            <td>No</td>
-            <td>No</td>
-            <td>No</td>
-        </tr>
+        {% for f in convivientes %}
+            <tr>
+                <td>{{ f.nombre }}</td>
+                <td>{{ f.apellido }}</td>
+                <td>{{ f.tipo_documento }} {{ f.numero_de_documento }}</td>
+                <td>{{ f.edad }}</td>
+                <td>{{ f.identidad_de_genero }}</td>
+                <td>{{ f.parentesco }}</td>
+                <td>{{ f.estado_civil }}</td>
+                <td>{{ f.estudios_alcanzados }}</td>
+                <td>{{ f.trabajo_remunerado }}</td>
+                <td>{{ f.otros_ingresos }}</td>
+                <td>{{ f.cobertura_de_salud }}</td>
+                <td>{{ f.discapacidad }} ({{ f.certificado_de_discapacidad }})</td>
+                <td>{{ f.enfermedad_cronica }}</td>
+                <td>{{ f.embarazo_en_curso|yesno:"Si,No" }}</td>
+            </tr>
+        {% endfor %}
         </tbody>
     </table>
+
+
+    <h3 class="w-100">Datos del grupo familiar no conviviente</h3>
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Nombre</th>
+            <th scope="col">Apellido</th>
+            <th scope="col">Observaciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for f in no_convivientes %}
+            <tr>
+                <td>{{ f.nombre }}</td>
+                <td>{{ f.apellido }}</td>
+                <td>{{ f.observaciones }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
 
     <h2 class="w-100 text-uppercase text-center">RELEVAMIENTO FISICO-AMBIENTAL</h2>
 
@@ -146,17 +140,17 @@
     <ul>
         {% for q in qa %}
             <!-- Titulos de categorias -->
-                {% if q.q == 'Baño' %}
+            {% if q.q == 'Baño' %}
                 <h3>Baño</h3>
-                {% elif q.q == '¿Dispone de un espacio para cocinar/comer?' %}
+            {% elif q.q == '¿Dispone de un espacio para cocinar/comer?' %}
                 <h3>Cocina</h3>
-                {% elif q.q == 'Tenencia' %}
+            {% elif q.q == 'Tenencia' %}
                 <h3>Sobre la vivienda</h3>
-                {% elif q.q == '¿Dispone de un espacio para cocinar/comer?' %}
+            {% elif q.q == '¿Dispone de un espacio para cocinar/comer?' %}
                 <h3>Cocina</h3>
-                {% elif q.q == 'Servicios / Agua potable' %}
+            {% elif q.q == 'Servicios / Agua potable' %}
                 <h3>Servicios</h3>
-                {% endif %}
+            {% endif %}
 
             <!-- Nombre del item -->
             <li>{{ q.q }}: <b>{{ q.a }}</b></li>
@@ -186,3 +180,7 @@
 <br>
 <br>
 <br>
+
+</div>
+
+</body>
