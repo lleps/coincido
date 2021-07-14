@@ -70,6 +70,21 @@
                             {% endif %}
                             <br>
 
+                            <!-- Completar observacion de la vivienda -->
+                            {% if match.completoFamilia and match.completoGrupoFamiliar and match.completoEncuesta %}
+                                {% if not match.completoObservaciones %}
+                                    <a href="detalle/{{ match.id }}" class="btn btn-sm btn-outline-primary mr-3">
+                                        Observaciones finales
+                                    </a>
+                                {% else %}
+                                    <span class="text-success text-sm"><i class="fa fa-check"></i> Observaciones finales.
+                                        <br>
+                                    <a class="btn btn-success" href="detalle/{{ match.id }}"><i class="fa fa-print"></i> Imprimir</a></span>
+                                {% endif %}
+                                <br>
+                            {% endif %}
+
+
                         </span>
                         {% endif %}
                     </li>

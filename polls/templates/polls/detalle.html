@@ -171,14 +171,23 @@
 
     <h2 class="text-uppercase w-100 text-center">Conclusiones generales y sugerencias de intervención</h2>
 
-    <textarea rows="10" class="w-100">
-    </textarea>
+    {% if permitirGuardarDescripcion %}
+        <form action="{% url 'polls:detalle_observaciones' pk %}" method="post">
+            {% csrf_token %}
+            <textarea rows="10" class="w-100" required name="observaciones">{{ b.observaciones }}</textarea>
+            <br><br>
+            <button type="submit" class="btn btn-danger btn-block py-3"><i class="fa fa-save"></i> Guardar y finalizar observación</button>
+        </form>
+    {% else %}
+        <textarea rows="10" class="w-100">{{ b.observaciones }}</textarea>
+        <div class="row">
+            <div class="col-4">FIRMA DEL TRABAJADOR SOCIAL</div>
+            <div class="col-4">SELLO</div>
+            <div class="col-4">DNI</div>
+        </div>
+    {% endif %}
 
-    <div class="row">
-        <div class="col-4">FIRMA DEL TRABAJADOR SOCIAL</div>
-        <div class="col-4">SELLO</div>
-        <div class="col-4">DNI</div>
-    </div>
+
 
 </div>
 <br>

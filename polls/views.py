@@ -69,6 +69,7 @@ def index(request):
             'completoEncuesta': get_first_unanswered_question_index(b, questions) == -1,
             'completoFamilia': b.familia is not None,
             'completoGrupoFamiliar': b.terminado_datos_familia,
+            'completoObservaciones': len(b.observaciones) > 0,
         })
 
     context = {
@@ -106,9 +107,11 @@ def detalle(request, beneficiario_id):
             continue
 
     context = {
+        'pk': beneficiario.id,
         'b': beneficiario,
         'f': beneficiario.familia,
         'qa': qa,
+        'permitirGuardarDescripcion': request.user == beneficiario.usuario and len(beneficiario.observaciones) == 0,
         'convivientes': MiembroConviviente.objects.filter(beneficiario=beneficiario),
         'no_convivientes': MiembroNoConviviente.objects.filter(beneficiario=beneficiario),
     }
@@ -196,6 +199,15 @@ class FamiliaForm(forms.ModelForm):
             'nino_tipo_documento': 'Tipo de documento',
             'nino_numero_documento': 'Número de documento',
         }
+
+
+def detalle_observaciones(request, pk):
+    beneficiario = get_object_or_404(Beneficiario, pk=pk)
+    if request.method == 'POST':
+        beneficiario.observaciones = request.POST['observaciones']
+        beneficiario.save()
+
+    return HttpResponseRedirect(reverse("polls:index"))
 
 
 def grupofamiliar_post_conv(request, pk):

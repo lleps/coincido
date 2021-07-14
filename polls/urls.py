@@ -11,6 +11,7 @@ urlpatterns = [
     path('beneficiario/', app_views.beneficiario, name='beneficiario'),
     path('resumen/<int:user_index>', app_views.resumen, name='resumen'),
     path('detalle/<int:beneficiario_id>', app_views.detalle, name='detalle'),
+    path('detalle_observaciones/<int:pk>/', app_views.detalle_observaciones, name='detalle_observaciones'),
     path('familia/<int:pk>/', app_views.familia, name='familia'),
     path('grupofamiliar/<int:pk>/', app_views.grupofamiliar, name='grupofamiliar'),
     path('grupofamiliar_post_conv/<int:pk>/', app_views.grupofamiliar_post_conv, name='grupofamiliar_post_conv'),
