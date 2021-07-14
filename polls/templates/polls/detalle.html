@@ -104,7 +104,11 @@
                 <td>{{ f.estudios_alcanzados }}</td>
                 <td>{{ f.trabajo_remunerado }}</td>
                 <td>${{ f.ingresos_por_trabajo }}</td>
-                <td>{{ f.otros_ingresos }}</td>
+                <td>
+                    {% for p in f.planes.all %}
+                        {{ p.nombre }},
+                    {% endfor %}
+                </td>
                 <td>{{ f.cobertura_de_salud }}</td>
                 <td>{{ f.discapacidad }} ({{ f.certificado_de_discapacidad }})</td>
                 <td>{{ f.enfermedad_cronica }}</td>
