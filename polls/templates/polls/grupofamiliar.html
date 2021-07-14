@@ -54,6 +54,7 @@
                     <th scope="col">Estado civil</th>
                     <th scope="col">Estudios alcanzados</th>
                     <th scope="col">Trabajo remunerado</th>
+                    <th scope="col">Ingresos por trabajo</th>
                     <th scope="col">Otros ingresos</th>
                     <th scope="col">Cobertura de salud</th>
                     <th scope="col">Discapacidad</th>
@@ -66,13 +67,14 @@
                     <tr>
                         <th scope="row">{{ f.nombre }}</th>
                         <td>{{ f.apellido }}</td>
-                        <td>{{ f.tipo_documento }} {{ f.numero_de_documento }}</td>
+                        <td>{{ f.tipo_de_documento }} {{ f.numero_de_documento }}</td>
                         <td>{{ f.edad }}</td>
                         <td>{{ f.identidad_de_genero }}</td>
                         <td>{{ f.parentesco }}</td>
                         <td>{{ f.estado_civil }}</td>
                         <td>{{ f.estudios_alcanzados }}</td>
                         <td>{{ f.trabajo_remunerado }}</td>
+                        <td>${{ f.ingresos_por_trabajo }}</td>
                         <td>{{ f.otros_ingresos }}</td>
                         <td>{{ f.cobertura_de_salud }}</td>
                         <td>{{ f.discapacidad }} ({{ f.certificado_de_discapacidad }})</td>

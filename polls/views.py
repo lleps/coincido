@@ -173,6 +173,12 @@ class MiembroConvivienteForm(forms.ModelForm):
         fields = '__all__'
         exclude = ['beneficiario']
 
+    def __init__(self, *args, **kwargs):
+        super(MiembroConvivienteForm, self).__init__(*args, **kwargs)
+
+        self.fields["planes"].widget = forms.CheckboxSelectMultiple()
+        self.fields["planes"].queryset = TipoDePlan.objects.all()
+
 
 class MiembroNoConvivienteForm(forms.ModelForm):
     class Meta:

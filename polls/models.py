@@ -99,6 +99,13 @@ class Beneficiario(models.Model):
     )
 
 
+class TipoDePlan(models.Model):
+    nombre = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.nombre
+
+
 # Define un conviviente de un beneficiario
 class MiembroConviviente(models.Model):
     ESTADO_CIVIL_CHOICES = [
@@ -186,7 +193,8 @@ class MiembroConviviente(models.Model):
     estado_civil = models.CharField(max_length=80, verbose_name="Estado civíl", choices=PARENTESCO_CHOICES)
     estudios_alcanzados = models.CharField(verbose_name="Estudios alcanzados", max_length=50)
     trabajo_remunerado = models.CharField(max_length=80, choices=TRABAJO_REMUNERADO_CHOICES)
-    otros_ingresos = models.CharField(max_length=80, choices=OTROS_INGRESOS_CHOICES)
+    ingresos_por_trabajo = models.IntegerField()
+    planes = models.ManyToManyField(TipoDePlan, verbose_name="Otros ingresos")
     cobertura_de_salud = models.CharField(max_length=80, choices=COBERTURA_DE_SALUD_CHOICES)
     discapacidad = models.CharField(max_length=80, choices=DISCAPACIDAD_CHOICES)
     certificado_de_discapacidad = models.CharField(max_length=80, choices=CERTIFICADO_DE_DISCAPACIDAD_CHOICES, default="No")
