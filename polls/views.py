@@ -86,33 +86,19 @@ def detalle(request, beneficiario_id):
 
     qa = []
     questions = Question.objects.all()
-    answers = Answer.objects.filter(beneficiario=beneficiario)
 
     for q in questions:
-        choices = Choice.objects.filter(question=q)
-
         try:
             answer = Answer.objects.get(question=q, beneficiario=beneficiario)
-            answer_text = ""
-            if answer.choice == 99 or answer.choice == '99':
-                answer_text = "Otro: " + str(answer.other_text)
-            else:
-                answer_text = choices[answer.choice].choice_text
-
-
             entry = {
                 'q': q.question_text,
-                'a': answer_text,
+                'a': answer.get_text(),
             }
 
             if answer.image is not None:
-                logger.info("HAS IMAGE! answer")
                 entry['img'] = answer.image
             else:
-                logger.info("DOES NOT HAVE IMAGE!")
                 entry['img'] = None
-
-            #logger.info(entry['img'])
 
             qa.append(entry)
         except Answer.DoesNotExist:

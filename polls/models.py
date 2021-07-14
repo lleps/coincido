@@ -276,6 +276,25 @@ class Answer(models.Model):
     other_text = models.CharField(max_length=128, default='')
     image = models.ImageField(null=True, blank=True)
 
+    def get_text(self):
+        try:
+            question = Question.objects.get(pk=self.question_id)
+            choices = Choice.objects.all()
+            if 0 <= self.choice <= len(choices):
+                return choices[self.choice].choice_text
+
+            if self.choice == -1:
+                return "-"
+
+            if self.choice == 99:
+                return question.other_text + ": " + self.other_text
+
+            return "?"
+
+        except (Exception) as e:
+            print("error " + str(e))
+            return "exception"
+
 
 class Profile(models.Model):
     GENDER_CHOICES = [
