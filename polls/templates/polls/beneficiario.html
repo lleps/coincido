@@ -58,62 +58,57 @@
 
             <h3>Ubique el inmueble en el mapa.</h3>
             <div id="map"></div>
-            <script async defer src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap"></script>
+            <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAmOfy_ZrunHS24lMG9-QA-Eqnc3PVZOUU&callback=initMap"></script>
             <br>
             <button type="submit" class="btn btn-primary btn-block">Registrar</button>
         </form>
     </div>
 
     <script>
-// Note: This example requires that you consent to location sharing when
-// prompted by your browser. If you see the error "The Geolocation service
-// failed.", it means you probably did not give permission for the browser to
-// locate you.
-var map, infoWindow;
-function initMap() {
-	geocoder = new google.maps.Geocoder();
+        var map, marker;
 
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: -34.397, lng: 150.644},
-    zoom: 16
-  });
-  infoWindow = new google.maps.InfoWindow;
+        function selectPos(latLng) {
+            if (marker) marker.setMap(null);
+            marker = new google.maps.Marker({
+                position: latLng,
+                map: map,
+                title: 'Ubicación'
+            });
+            let latElem = document.getElementById("id_inm_lat");
+            let lngElem = document.getElementById("id_inm_lng");
+            if (latElem) latElem.setAttribute("value", latLng.lat.toFixed(4));
+            if (lngElem) lngElem.setAttribute("value", latLng.lng.toFixed(4));
+        }
 
-  // Try HTML5 geolocation.
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(position) {
-      var pos = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-      };
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: -31.41, lng: -64.183},
+                zoom: 8
+            });
 
-      geocoder.geocode( { 'location': pos}, function(results, status, infowindow) {
-      if (status == 'OK') {
-            console.log(results[0].formatted_address);
-            infoWindow.setContent('Location found: '+ results[0].formatted_address);
-            infoWindow.setPosition(pos);
-            infoWindow.open(map);
-      } else {
-      			console.log('Geocode was not successful for the following reason: ' + status);
-      }
-    });
+            google.maps.event.addListener(map, 'click', function(event) {
+                var myLatlng = new google.maps.LatLng(event.latLng.lat(),event.latLng.lng() );
+                selectPos({ lat: event.latLng.lat(), lng: event.latLng.lng() });
+            });
 
-      map.setCenter(pos);
-    }, function() {
-      handleLocationError(true, infoWindow, map.getCenter());
-    });
-  } else {
-    // Browser doesn't support Geolocation
-    handleLocationError(false, infoWindow, map.getCenter());
-  }
-}
+            // Try HTML5 geolocation.
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    selectPos(pos);
+                }, function(err) {
+                    /*alert(
+                        "Necesita permitir la ubicación, puede recargar la página para que se le vuelva a preguntar.\n" +
+                        "Error: " + err.message
+                    )*/
+                });
+            } else {
+                alert("Este navegador no soporta geolocalización.")
+            }
+        }
 
-function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-  infoWindow.setPosition(pos);
-  infoWindow.setContent(browserHasGeolocation ?
-                        'Error: The Geolocation service failed.' :
-                        'Error: Your browser doesn\'t support geolocation.');
-  infoWindow.open(map);
-}
     </script>
 {% endblock %}

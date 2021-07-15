@@ -340,6 +340,9 @@ class AgregarBeneficiarioForm(forms.Form):
     observaciones = forms.CharField(label='Observaciones (opcional)', widget=forms.Textarea, max_length=256,
                                     required=False)
 
+    inm_lat = forms.FloatField(widget=forms.HiddenInput(), required=False, label="", label_suffix="")
+    inm_lng = forms.FloatField(widget=forms.HiddenInput(), required=False, label="", label_suffix="")
+
 
 # Vista para agregar un beneficiario
 def beneficiario(request):
@@ -359,8 +362,8 @@ def beneficiario(request):
                 inm_localidad=data['localidad'],
                 inm_departamento=data['departamento'],
                 inm_codigo_postal=data['codigo_postal'],
-                inm_lat=0,
-                inm_lng=0,
+                inm_lat=data['inm_lat'],
+                inm_lng=data['inm_lng'],
                 entrevista_efectiva=data['entrevista_efectiva'],
             )
             return HttpResponseRedirect(reverse('polls:index'))
