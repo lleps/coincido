@@ -49,7 +49,7 @@ class BeneficiarioFamilia(models.Model):
     jefe_fecha_nacimiento = models.DateField()
     jefe_edad = models.IntegerField()
     jefe_telefono = models.CharField(max_length=50)
-    jefe_contacto = models.CharField(max_length=100)
+    jefe_contacto = models.CharField(max_length=100, blank=True, default="")
     jefe_estado_civil = models.CharField(max_length=100, choices=ESTADO_CIVIL_CHOICES)
     jefe_nacionalidad = models.CharField(max_length=120)
     jefe_personas_en_hogar = models.IntegerField()
@@ -282,7 +282,7 @@ class Answer(models.Model):
     def get_text(self):
         try:
             question = Question.objects.get(pk=self.question_id)
-            choices = Choice.objects.all()
+            choices = Choice.objects.filter(question=question)
             if 0 <= self.choice <= len(choices):
                 return choices[self.choice].choice_text
 
