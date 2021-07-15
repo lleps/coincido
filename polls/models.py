@@ -193,7 +193,7 @@ class MiembroConviviente(models.Model):
     edad = models.IntegerField()
     identidad_de_genero = models.CharField(max_length=80, verbose_name="Identidad de género", choices=IDENTIDAD_DE_GENERO_CHOICES)
     parentesco = models.CharField(max_length=80, verbose_name="Parentezco c/jefe/a flia", choices=PARENTESCO_CHOICES)
-    estado_civil = models.CharField(max_length=80, verbose_name="Estado civíl", choices=PARENTESCO_CHOICES)
+    estado_civil = models.CharField(max_length=80, verbose_name="Estado civíl", choices=ESTADO_CIVIL_CHOICES)
     estudios_alcanzados = models.CharField(verbose_name="Estudios alcanzados", max_length=50)
     trabajo_remunerado = models.CharField(max_length=80, choices=TRABAJO_REMUNERADO_CHOICES)
     ingresos_por_trabajo = models.IntegerField()

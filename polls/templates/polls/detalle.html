@@ -5,6 +5,9 @@
     <style>
         body {
         }
+
+        tr{ font-size: 80%; }
+        th{ font-size: 80%; }
         h2 {
             background: lightgray;
             width: 100%;
@@ -21,6 +24,14 @@
 <body>
 
 <div class="">
+    <button class="btn-block w-100 btn btn-warning" onclick="
+    console.log(this);
+    this.style.setProperty('visibility', 'hidden');
+    setTimeout(() => this.style.setProperty('visibility', 'visible'), 2000)
+    this.visibility='hidden';
+    window.print();
+    return false;
+"><i class="fa fa-print"></i> Imprimir</button>
 
 <img src="/static/polls/header.png" style="width: 100%;
     transform: scale(0.5);
@@ -179,7 +190,7 @@
             <button type="submit" class="btn btn-danger btn-block py-3"><i class="fa fa-save"></i> Guardar y finalizar observación</button>
         </form>
     {% else %}
-        <textarea rows="10" class="w-100">{{ b.observaciones }}</textarea>
+        <textarea rows="10" class="w-100" disabled>{{ b.observaciones }}</textarea>
         <div class="row">
             <div class="col-4">FIRMA DEL TRABAJADOR SOCIAL</div>
             <div class="col-4">SELLO</div>
