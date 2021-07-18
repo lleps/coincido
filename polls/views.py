@@ -59,6 +59,15 @@ def index(request):
     results = []  # lista de { beneficiarioDNI, beneficiarioNombre, beneficiarioApellido, completoEncuestaONo }
 
     for b in beneficiarios:
+        if b.familia is not None:
+            familiaJefeDNI = str(b.familia.jefe_numero_documento)
+            familiaJefeNombre = b.familia.jefe_nombre
+            familiaJefeApellido = b.familia.jefe_apellido
+        else:
+            familiaJefeDNI = ""
+            familiaJefeNombre = ""
+            familiaJefeApellido = ""
+
         results.append({
             'id': b.id,
             'barrio': b.inm_barrio,
@@ -70,6 +79,9 @@ def index(request):
             'completoFamilia': b.familia is not None,
             'completoGrupoFamiliar': b.terminado_datos_familia,
             'completoObservaciones': len(b.observaciones) > 0,
+            'familiaJefeDNI': familiaJefeDNI,
+            'familiaJefeNombre': familiaJefeNombre,
+            'familiaJefeApellido': familiaJefeApellido,
         })
 
     context = {
@@ -141,15 +153,31 @@ def resumen(request, user_index):
 
     beneficiarios_result = []
     for b in beneficiarios:
+
+        if b.familia is not None:
+            familiaJefeDNI = str(b.familia.jefe_numero_documento)
+            familiaJefeNombre = b.familia.jefe_nombre
+            familiaJefeApellido = b.familia.jefe_apellido
+        else:
+            familiaJefeDNI = ""
+            familiaJefeNombre = ""
+            familiaJefeApellido = ""
+
         beneficiarios_result.append({
             'id': b.id,
             'barrio': b.inm_barrio,
             'calle': b.inm_calle,
             'numero': b.inm_numero,
+            'jefeDNI': b.inm_numero,
+            'jefeNombre': b.inm_numero,
+            'jefeApellido': b.inm_numero,
             'entrevistaEfectiva': b.entrevista_efectiva == 'Si' or b.entrevista_efectiva == 'si',
             'entrevistaRazon': b.entrevista_efectiva,
             'completoEncuesta': get_first_unanswered_question_index(b, questions) == -1,
             'completoFamilia': b.familia is not None,
+            'familiaJefeDNI': familiaJefeDNI,
+            'familiaJefeNombre': familiaJefeNombre,
+            'familiaJefeApellido': familiaJefeApellido,
         })
 
     context['result'] = beneficiarios_result

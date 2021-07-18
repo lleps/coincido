@@ -19,7 +19,14 @@
             <ul class="list-group">
                 {% for match in result %}
                     <li class="list-group-item">
-                        <h5>{{ match.barrio }}, {{ match.calle }} {{ match.numero }}.</h5><br>
+
+                        <h5>
+                            {% if match.familiaJefeDNI != '' %}
+                                {{ match.familiaJefeDNI }} {{ match.familiaJefeNombre }} {{ match.familiaJefeApellido }} /
+                            {% endif %}
+                            {{ match.barrio }}, {{ match.calle }} {{ match.numero }}.
+                        </h5>
+                        <br>
 
                         {% if not match.completoEncuesta or not match.completoFamilia %}
                         <span class="text-muted">
