@@ -140,7 +140,7 @@ class BeneficiarioFamilia(models.Model):
     nino_identidad_de_genero = models.CharField(max_length=80, verbose_name="Identidad de género",
                                                 choices=IDENTIDAD_DE_GENERO_CHOICES)
     nino_educacion = models.CharField(max_length=120, verbose_name="Educación")
-    nino_parentesco = models.CharField(max_length=80, verbose_name="Parentezco c/jefe/a flia", choices=PARENTESCO_CHOICES)
+    nino_parentesco = models.CharField(max_length=80, verbose_name="Parentezco c/jefe/a flia")
     nino_cobertura_de_salud = models.CharField(max_length=80, choices=COBERTURA_DE_SALUD_CHOICES, verbose_name="Cobertura de salud")
     nino_discapacidad = models.CharField(max_length=80, choices=DISCAPACIDAD_CHOICES, verbose_name="Discapacidad")
     nino_certificado_de_discapacidad = models.CharField(max_length=80, choices=CERTIFICADO_DE_DISCAPACIDAD_CHOICES,
