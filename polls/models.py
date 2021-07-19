@@ -6,6 +6,13 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 
 
+class TipoDePlan(models.Model):
+    nombre = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.nombre
+
+
 # datos sociales sobre un beneficiario.
 # por ahora omitir grupo familiar; solamente
 # el que esta a cargo y eso.
@@ -36,6 +43,63 @@ class BeneficiarioFamilia(models.Model):
         ('nunca-tuvo', 'Nunca Tuvo'),
         ('otro', 'Otro'),
     ]
+    IDENTIDAD_DE_GENERO_CHOICES = [
+        ('Mujer', 'Mujer'),
+        ('Varón', 'Varón'),
+        ('Disidencia', 'Disidencia'),
+    ]
+    PARENTESCO_CHOICES = [
+        ('Jefe', 'Jefe'),
+        ('Cónyuge/pareja', 'Cónyuge/pareja'),
+        ('Hijo/a', 'Hijo/a'),
+        ('Yerno/nuera', 'Yerno/nuera'),
+        ('Nieto/a', 'Nieto/a'),
+        ('Padre/madre', 'Padre/madre'),
+        ('Suegro/a', 'Suegro/a'),
+        ('Otro familiar', 'Otro familiar'),
+        ('No familiar', 'No familiar'),
+    ]
+    TRABAJO_REMUNERADO_CHOICES = [
+        ('Formal', 'Formal'),
+        ('Informal', 'Informal'),
+        ('Autónomo', 'Autónomo'),
+        ('Jubilación/retiro', 'Jubilación/retiro'),
+        ('Desocupado', 'Desocupado'),
+    ]
+    OTROS_INGRESOS_CHOICES = [
+        ('AUH', 'AUH'),
+        ('AUE', 'AUE'),
+        ('Tarjeta Alimentar', 'Tarjeta Alimentar'),
+        ('Potenciar Inclusión Joven', 'Potenciar Inclusión Joven'),
+        ('Argentina Hace', 'Argentina Hace'),
+        ('Potenciar Trabajo', 'Potenciar Trabajo'),
+        ('Fondo Desempleo', 'Fondo Desempleo'),
+        ('Pensión Madre de 7 hijos', 'Pensión Madre de 7 hijos'),
+        ('Pensión por discapacidad', 'Pensión por discapacidad'),
+        ('IFE', 'IFE'),
+        ('Otros', 'Otros'),
+    ]
+    COBERTURA_DE_SALUD_CHOICES = [
+        ('No posee', 'No posee'),
+        ('Pre paga', 'Pre paga'),
+        ('APROSS', 'APROSS'),
+        ('PAMI', 'PAMI'),
+        ('PROFE', 'PROFE'),
+        ('Otros', 'Otros'),
+    ]
+    DISCAPACIDAD_CHOICES = [
+        ('No', 'No'),
+        ('Motriz', 'Motriz'),
+        ('Intelectual', 'Intelectual'),
+        ('Sensorial', 'Sensorial'),
+        ('Multidiscapacidad', 'Multidiscapacidad'),
+    ]
+    CERTIFICADO_DE_DISCAPACIDAD_CHOICES = [
+        ('Si, Vigente', 'Si, Vigente'),
+        ('Si, No vigente', 'Si, No Vigente'),
+        ('En trámite', 'En trámite'),
+        ('No', 'No'),
+    ]
 
     # datos del hogar
     cantidad_hogares = models.CharField(max_length=120, choices=CANTIDAD_HOGARES_CHOICES, default='1')
@@ -53,12 +117,35 @@ class BeneficiarioFamilia(models.Model):
     jefe_estado_civil = models.CharField(max_length=100, choices=ESTADO_CIVIL_CHOICES)
     jefe_nacionalidad = models.CharField(max_length=120)
     jefe_personas_en_hogar = models.IntegerField()
+    jefe_identidad_de_genero = models.CharField(max_length=80, verbose_name="Identidad de género",
+                                                choices=IDENTIDAD_DE_GENERO_CHOICES)
+    jefe_estudios_alcanzados = models.CharField(verbose_name="Estudios alcanzados", max_length=50)
+    jefe_trabajo_remunerado = models.CharField(max_length=80, choices=TRABAJO_REMUNERADO_CHOICES, verbose_name="Trabajo remunerado")
+    jefe_ingresos_por_trabajo = models.IntegerField(verbose_name="Ingresos por trabajo")
+    jefe_planes = models.ManyToManyField(TipoDePlan, verbose_name="Otros ingresos")
+    jefe_cobertura_de_salud = models.CharField(max_length=80, choices=COBERTURA_DE_SALUD_CHOICES, verbose_name="Cobertura de salud")
+    jefe_discapacidad = models.CharField(max_length=80, choices=DISCAPACIDAD_CHOICES, verbose_name="Discapacidad")
+    jefe_certificado_de_discapacidad = models.CharField(max_length=80, choices=CERTIFICADO_DE_DISCAPACIDAD_CHOICES,
+                                                        default="No", verbose_name="Certificado de discapacidad")
+    jefe_enfermedad_cronica = models.CharField(max_length=80, verbose_name="Enfermedad Crónica", default="No")
+    jefe_embarazo_en_curso = models.BooleanField(default=False, verbose_name="Embarazo en curso")
 
     # datos del niño/a
-    nino_apellido = models.CharField(max_length=120)
-    nino_nombre = models.CharField(max_length=120)
-    nino_tipo_documento = models.CharField(max_length=120, choices=TIPO_DOCUMENTO_CHOICES, default='dni')
-    nino_numero_documento = models.IntegerField()
+    nino_apellido = models.CharField(max_length=120, verbose_name="Apellido")
+    nino_nombre = models.CharField(max_length=120, verbose_name="Nombre")
+    nino_tipo_documento = models.CharField(max_length=120, choices=TIPO_DOCUMENTO_CHOICES, default='dni', verbose_name="Tipo de documento")
+    nino_numero_documento = models.IntegerField(verbose_name="Número de documento")
+    nino_fecha_nacimiento = models.DateField(verbose_name="Fecha de nacimiento")
+    nino_edad = models.IntegerField(verbose_name="Edad")
+    nino_identidad_de_genero = models.CharField(max_length=80, verbose_name="Identidad de género",
+                                                choices=IDENTIDAD_DE_GENERO_CHOICES)
+    nino_educacion = models.CharField(max_length=120, verbose_name="Educación")
+    nino_parentesco = models.CharField(max_length=80, verbose_name="Parentezco c/jefe/a flia", choices=PARENTESCO_CHOICES)
+    nino_cobertura_de_salud = models.CharField(max_length=80, choices=COBERTURA_DE_SALUD_CHOICES, verbose_name="Cobertura de salud")
+    nino_discapacidad = models.CharField(max_length=80, choices=DISCAPACIDAD_CHOICES, verbose_name="Discapacidad")
+    nino_certificado_de_discapacidad = models.CharField(max_length=80, choices=CERTIFICADO_DE_DISCAPACIDAD_CHOICES,
+                                                        default="No", verbose_name="Certificado de discapacidad")
+    nino_enfermedad_cronica = models.CharField(max_length=80, verbose_name="Enfermedad Crónica", default="No")
 
 
 # sobre quien es la encuesta.
@@ -100,13 +187,6 @@ class Beneficiario(models.Model):
 
     terminado_datos_familia = models.BooleanField(default=False)
     observaciones = models.CharField(max_length=3000, default="")
-
-
-class TipoDePlan(models.Model):
-    nombre = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.nombre
 
 
 # Define un conviviente de un beneficiario

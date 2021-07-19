@@ -296,6 +296,15 @@ class FamiliaForm(forms.ModelForm):
             'nino_numero_documento': 'Número de documento',
         }
 
+    def __init__(self, *args, **kwargs):
+        super(FamiliaForm, self).__init__(*args, **kwargs)
+
+        self.fields["jefe_planes"].widget = forms.CheckboxSelectMultiple()
+        self.fields["jefe_planes"].queryset = TipoDePlan.objects.all()
+
+        #self.fields["nino_planes"].widget = forms.CheckboxSelectMultiple()
+        #self.fields["nino_planes"].queryset = TipoDePlan.objects.all()
+
 
 def detalle_observaciones(request, pk):
     beneficiario = get_object_or_404(Beneficiario, pk=pk)
