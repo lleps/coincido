@@ -1,5 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, FileResponse, HttpResponseNotFound
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse, reverse_lazy
@@ -48,6 +48,74 @@ def get_first_unanswered_question_index(beneficiario, questions):
         min_non_answered_index += 1
 
     return -1
+
+import io
+import xlsxwriter
+
+
+def excelreport(request, user_index):
+    users = User.objects.all()
+    if user_index < 0 or user_index >= len(users):
+        return HttpResponseNotFound("cant find user index " + str(user_index))
+
+    user = users[user_index]
+
+    buffer = io.BytesIO()
+    workbook = xlsxwriter.Workbook(buffer)
+    worksheet = workbook.add_worksheet()
+    questions = Question.objects.all()
+
+    columns = ['id', 'localidad', 'entrevistador_nombre_apellido',
+             'entrevistador_fecha', 'inm_calle', 'inm_numero',
+             'inm_barrio', 'inm_localidad', 'inm_departamento',
+             'inm_lat', 'inm_lng', 'observaciones',
+             # familia
+             'cantidad_hogares', 'numero_de_hogar', 'jefe_apellido',
+             'jefe_nombre', 'jefe_tipo_documento', 'jefe_numero_documento',
+             'jefe_fecha_nacimiento', 'jefe_edad', 'jefe_telefono',
+             'jefe_contacto', 'jefe_estado_civil', 'jefe_nacionalidad',
+             'jefe_personas_en_hogar', 'nino_apellido', 'nino_nombre',
+             'nino_tipo_documento', 'nino_numero_documento']
+
+    for q in questions:
+        columns.append(q.question_text)
+
+    row = 1
+    bold = workbook.add_format({'bold': True})
+    worksheet.write_row(0, 0, columns, bold)
+
+    for b in Beneficiario.objects.filter(usuario_id=user.id):
+        if b.familia is None:
+            continue
+
+        f = b.familia
+        attrs = [b.id, b.usuario.username, b.entrevistador_nombre_apellido,
+                 b.entrevistador_fecha, b.inm_calle, b.inm_numero,
+                 b.inm_barrio, b.inm_localidad, b.inm_departamento,
+                 b.inm_lat, b.inm_lng, b.observaciones,
+                 # familia
+                 f.cantidad_hogares, f.numero_de_hogar, f.jefe_apellido,
+                 f.jefe_nombre, f.jefe_tipo_documento, f.jefe_numero_documento,
+                 f.jefe_fecha_nacimiento, f.jefe_edad, f.jefe_telefono,
+                 f.jefe_contacto, f.jefe_estado_civil, f.jefe_nacionalidad,
+                 f.jefe_personas_en_hogar, f.nino_apellido, f.nino_nombre,
+                 f.nino_tipo_documento, f.nino_numero_documento]
+
+        # Rellenar todas las preguntas. Y respuestas.
+        for q in questions:
+            try:
+                answer = Answer.objects.get(question=q, beneficiario=b)
+                attrs.append(answer.get_text())
+            except Answer.DoesNotExist:
+                continue
+
+        worksheet.write_row(row, 0, attrs)
+        row += 1
+
+    workbook.close()
+    buffer.seek(0)
+
+    return FileResponse(buffer, as_attachment=True, filename=user.username + '-reporte.xlsx')
 
 
 def index(request):

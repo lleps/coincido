@@ -13,6 +13,7 @@ urlpatterns = [
     path('detalle/<int:beneficiario_id>', app_views.detalle, name='detalle'),
     path('detalle_observaciones/<int:pk>/', app_views.detalle_observaciones, name='detalle_observaciones'),
     path('familia/<int:pk>/', app_views.familia, name='familia'),
+    path('excelreport/<int:user_index>', app_views.excelreport, name='excelreport'),
     path('grupofamiliar/<int:pk>/', app_views.grupofamiliar, name='grupofamiliar'),
     path('grupofamiliar_post_conv/<int:pk>/', app_views.grupofamiliar_post_conv, name='grupofamiliar_post_conv'),
     path('grupofamiliar_post_no_conv/<int:pk>/', app_views.grupofamiliar_post_no_conv, name='grupofamiliar_post_no_conv'),

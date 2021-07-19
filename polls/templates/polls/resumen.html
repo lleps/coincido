@@ -16,6 +16,12 @@
                 {% endfor %}
             </ul>
 
+            <a href="/excelreport/{{ selected_user }}"
+               class="my-3 btn btn-block btn-success">
+                <i class="fa fa-download"></i>
+                Exportar a Excel relevamientos completos
+            </a>
+
             <ul class="list-group">
                 {% for match in result %}
                     <li class="list-group-item">
