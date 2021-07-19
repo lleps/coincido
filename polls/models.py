@@ -389,7 +389,6 @@ class Answer(models.Model):
 
                 for c in choices_selected:
                     c_int = int(c)
-                    print("c is " + str(c_int))
                     if 0 <= c_int < len(choices):
                         result += choices[c_int].choice_text + " "
 

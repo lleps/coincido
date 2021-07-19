@@ -65,7 +65,7 @@
                         >
                         <i></i> {{ question.other_text }}:
                     </label>
-                    <input type="text" class="form-control d-inline w-auto" name="other_text"/>
+                    <input type="text" class="form-control d-inline w-auto" name="other_text" value="{{ other_text }}"/>
                     <br>
                 {% endif %}
 
@@ -87,6 +87,14 @@
                         </label>
                     </div>
                 {% endfor %}
+            {% endif %}
+
+            {% if question.allow_observations %}
+                <br>
+                <div class="form-group">
+                    <label for="observationsTextarea">Observaciones opcionales:</label>
+                    <textarea class="form-control" id="observationsTextarea" rows="3" name="observations" placeholder="Agregar observaciones...">{{ observations }}</textarea>
+                </div>
             {% endif %}
 
             <div class="row pt-4">

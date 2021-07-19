@@ -561,6 +561,8 @@ def detail(request, pk, question_id):
         'answer_index': 0,
         'selected_choices': selected_choices,  # for multiple choice
         'question_index': question_id,
+        'observations': '',
+        'other_text': '',
         'question_max': len(questions),
         'question_percent': int((question_id + 1) / len(questions) * 100),
         'is_last': question_id == len(questions) - 1,
@@ -576,6 +578,8 @@ def detail(request, pk, question_id):
         answer = Answer.objects.get(user=request.user, beneficiario=beneficiario, question=question)
         context['has_answer'] = True
         context['answer_index'] = answer.choice
+        context['observations'] = answer.observations
+        context['other_text'] = answer.other_text
         logger.info("found answer for such question: " + str(answer.choice))
 
         # add selected_choices list
@@ -674,6 +678,7 @@ def vote(request, pk, question_id):
             selected_choice = request.POST['choice']
 
         other_text = request.POST.get('other_text', '')
+        logger.info("other_text detectado a " + other_text)
         observations = request.POST.get('observations', '')
 
     except KeyError:
@@ -696,7 +701,7 @@ def vote(request, pk, question_id):
         answer.observations = observations
 
         if int(selected_choice) == 99:
-            answer.response_other = other_text
+            answer.other_text = other_text
             logger.info("response: other: " + other_text)
 
         answer.save()
