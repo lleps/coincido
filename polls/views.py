@@ -405,6 +405,49 @@ def familia(request, pk):
             beneficiario.familia = new_familia
             beneficiario.save()
 
+            # agregar entradas a la tabla con jefe e hijo
+            f = new_familia
+            jefe_m = MiembroConviviente.objects.create(
+                beneficiario=beneficiario,
+                nombre=f.jefe_nombre,
+                apellido=f.jefe_apellido,
+                tipo_de_documento=f.jefe_tipo_documento,
+                numero_de_documento=f.jefe_numero_documento,
+                edad=f.jefe_edad,
+                identidad_de_genero=f.jefe_identidad_de_genero,
+                parentesco="Jefe/a",
+                estado_civil=f.jefe_estado_civil,
+                estudios_alcanzados=f.jefe_estudios_alcanzados,
+                trabajo_remunerado=f.jefe_trabajo_remunerado,
+                ingresos_por_trabajo=f.jefe_ingresos_por_trabajo,
+                cobertura_de_salud=f.jefe_cobertura_de_salud,
+                discapacidad=f.jefe_discapacidad,
+                certificado_de_discapacidad=f.jefe_certificado_de_discapacidad,
+                enfermedad_cronica=f.jefe_enfermedad_cronica,
+                embarazo_en_curso=f.jefe_embarazo_en_curso,
+            )
+            jefe_m.planes.set(f.jefe_planes.all())
+
+            nino_m = MiembroConviviente.objects.create(
+                beneficiario=beneficiario,
+                nombre=f.nino_nombre,
+                apellido=f.nino_apellido,
+                tipo_de_documento=f.nino_tipo_documento,
+                numero_de_documento=f.nino_numero_documento,
+                edad=f.nino_edad,
+                identidad_de_genero=f.nino_identidad_de_genero,
+                parentesco=f.nino_parentesco,
+                estado_civil="-",
+                estudios_alcanzados=f.nino_educacion,
+                trabajo_remunerado="-",
+                ingresos_por_trabajo="0",
+                cobertura_de_salud=f.nino_cobertura_de_salud,
+                discapacidad=f.nino_discapacidad,
+                certificado_de_discapacidad=f.nino_certificado_de_discapacidad,
+                enfermedad_cronica=f.nino_enfermedad_cronica,
+                embarazo_en_curso=False,
+            )
+
             return HttpResponseRedirect(reverse('polls:index'))
 
         return render(request, 'polls/familia.html', {'form': form, 'pk': pk})
