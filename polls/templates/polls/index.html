@@ -69,7 +69,7 @@
 
                             <!-- Completar datos de la vivienda -->
                             {% if not match.completoEncuesta %}
-                                <a href="/{{ match.id }}/0" class="btn btn-sm btn-outline-primary mr-3">
+                                <a href="/{{ match.id }}/{{ match.first_unanswered_question }}" class="btn btn-sm btn-outline-primary mr-3">
                                     Relevamiento físico/ambiental
                                 </a>
                             {% else %}

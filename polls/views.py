@@ -136,6 +136,7 @@ def index(request):
             familiaJefeNombre = ""
             familiaJefeApellido = ""
 
+        first_unanswered_question = get_first_unanswered_question_index(b, questions)
         results.append({
             'id': b.id,
             'barrio': b.inm_barrio,
@@ -143,7 +144,8 @@ def index(request):
             'numero': b.inm_numero,
             'entrevistaEfectiva': b.entrevista_efectiva == 'Si' or b.entrevista_efectiva == 'si',
             'entrevistaRazon': b.entrevista_efectiva,
-            'completoEncuesta': get_first_unanswered_question_index(b, questions) == -1,
+            'first_unanswered_question': first_unanswered_question,
+            'completoEncuesta': first_unanswered_question == -1,
             'completoFamilia': b.familia is not None,
             'completoGrupoFamiliar': b.terminado_datos_familia,
             'completoObservaciones': len(b.observaciones) > 0,
