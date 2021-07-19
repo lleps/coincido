@@ -552,11 +552,14 @@ def detail(request, pk, question_id):
 
     is_image = choice_count > 0 and choices[0].choice_image
 
+    selected_choices = []
+
     context = {
         'id': beneficiario.pk,
         'question': question,
         'has_answer': False,
         'answer_index': 0,
+        'selected_choices': selected_choices,  # for multiple choice
         'question_index': question_id,
         'question_max': len(questions),
         'question_percent': int((question_id + 1) / len(questions) * 100),
@@ -574,6 +577,13 @@ def detail(request, pk, question_id):
         context['has_answer'] = True
         context['answer_index'] = answer.choice
         logger.info("found answer for such question: " + str(answer.choice))
+
+        # add selected_choices list
+        if question.multiple_choice:
+            options = answer.choice_multiple.split()
+            for opt in options:
+                selected_choices.append(int(opt))
+
     except Answer.DoesNotExist:
         logger.info("can't find answer")
 
@@ -640,9 +650,32 @@ def vote(request, pk, question_id):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('login'))
 
+    selected_choice = "99"
+    selected_choices = ""
+
+    # Parse selected choices from the post
     try:
-        selected_choice = request.POST['choice']
+        if question.multiple_choice:
+            selected_choices = ""
+            first = True
+            for i in range(50):
+                opt_selected = request.POST.get('check' + str(i), '')
+                if opt_selected:
+                    if not first:
+                        selected_choices += " "
+
+                    selected_choices += str(i)
+
+                first = False
+
+            logger.info("selected choices: " + selected_choices)
+
+        else:
+            selected_choice = request.POST['choice']
+
         other_text = request.POST.get('other_text', '')
+        observations = request.POST.get('observations', '')
+
     except KeyError:
         # Redisplay the question voting form.
         # TODO display with all the metadata
@@ -650,6 +683,7 @@ def vote(request, pk, question_id):
             'question': question,
             'error_message': "No elegiste ninguna opción.",
         })
+
     else:
         # Get or create an answer for such question
         try:
@@ -658,6 +692,9 @@ def vote(request, pk, question_id):
             answer = Answer.objects.create(user=request.user, beneficiario=beneficiario, question=question)
 
         answer.choice = selected_choice
+        answer.choice_multiple = selected_choices
+        answer.observations = observations
+
         if int(selected_choice) == 99:
             answer.response_other = other_text
             logger.info("response: other: " + other_text)

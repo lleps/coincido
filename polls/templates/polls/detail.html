@@ -39,8 +39,8 @@
                         </div>
                     {% endfor %}
                 </div>
-            <!-- For radio choices -->
-            {% else %}
+            <!-- For radio choices, not multiple -->
+            {% elif not question.multiple_choice %}
                 {% for choice in question.choice_set.all %}
                     <label class="rad">
                         <input
@@ -72,6 +72,21 @@
                 {% if question.allow_image %}
 
                 {% endif %}
+            {% else %}
+                {% for choice in question.choice_set.all %}
+                    <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input"
+                               id="check{{ forloop.counter0 }}"
+                               name="check{{ forloop.counter0 }}"
+                               {% for c in selected_choices %}
+                                   {% if c == forloop.parentloop.counter0 %} checked {% endif %}
+                               {% endfor %}
+                        >
+                        <label class="form-check-label" for="check{{ forloop.counter0 }}">
+                            {{ choice.choice_text }}
+                        </label>
+                    </div>
+                {% endfor %}
             {% endif %}
 
             <div class="row pt-4">

@@ -298,6 +298,8 @@ class Question(models.Model):
     allow_other = models.BooleanField(verbose_name='Permitir otros', help_text="Permitir opción 'Otros'")
     allow_image = models.BooleanField(verbose_name='Permitir poner una imágen')
     other_text = models.CharField(max_length=200, default="Otro")
+    multiple_choice = models.BooleanField(verbose_name="Multiples respuestas", default=False)
+    allow_observations = models.BooleanField(verbose_name="Permitir observaciones extra", default=False)
 
     def __str__(self):
         return self.question_text
@@ -358,21 +360,42 @@ class Answer(models.Model):
     choice = models.IntegerField(default=0)  # choice picked in the answer
     other_text = models.CharField(max_length=128, default='')
     image = models.ImageField(null=True, blank=True)
+    choice_multiple = models.CharField(max_length=200, default='')
+    observations = models.CharField(max_length=500, default='')
 
     def get_text(self):
         try:
             question = Question.objects.get(pk=self.question_id)
             choices = Choice.objects.filter(question=question)
-            if 0 <= self.choice <= len(choices):
-                return choices[self.choice].choice_text
+            observations = ''
+            if self.observations != '':
+                observations = ' (' + self.observations + ')'
 
-            if self.choice == -1:
-                return "-"
+            # only one choice
+            if not question.multiple_choice:
+                if 0 <= self.choice < len(choices):
+                    return choices[self.choice].choice_text + observations
 
-            if self.choice == 99:
-                return question.other_text + ": " + self.other_text
+                if self.choice == -1:
+                    return "-" + observations
 
-            return "?"
+                if self.choice == 99:
+                    return question.other_text + ": " + self.other_text + observations
+
+            # multiple choices
+            else:
+                choices_selected = self.choice_multiple.split()
+                result = ""
+
+                for c in choices_selected:
+                    c_int = int(c)
+                    print("c is " + str(c_int))
+                    if 0 <= c_int < len(choices):
+                        result += choices[c_int].choice_text + " "
+
+                return result + observations
+
+            return "?" + observations
 
         except (Exception) as e:
             print("error " + str(e))
