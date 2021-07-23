@@ -331,6 +331,9 @@ def grupofamiliar_post_conv(request, pk):
             result.save()
             return HttpResponseRedirect(reverse("polls:grupofamiliar", args=(pk,)))
 
+        else:
+            logger.info("can't save form data")
+
     else:
         conv_form = MiembroConvivienteForm()
 

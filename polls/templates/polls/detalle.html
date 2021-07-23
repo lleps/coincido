@@ -49,12 +49,12 @@
 
     Apellido/s: <b>{{ f.jefe_apellido }}</b><br>
     Nombre: <b>{{ f.jefe_nombre }}</b><br>
-    Documento de identidad, tipo: <b>{{ f.jefe_tipo_documento }}</b><br>
+    Documento de identidad, tipo: <b>{{ f.get_jefe_tipo_documento_display }}</b><br>
     DNI N°: <b>{{ f.jefe_numero_documento }}</b><br>
-    Fecha de nacimiento: <b>{{ f.jefe_fecha_nacimiento }}</b><br>
+    Fecha de nacimiento: <b>{{ f.jefe_fecha_nacimiento|date:'d/m/Y' }}</b><br>
     Edad: <b>{{ f.jefe_edad }}</b><br>
     Nacionalidad: <b>{{ f.jefe_nacionalidad }}</b><br>
-    Estado civil: <b>{{ f.jefe_estado_civil }}</b><br>
+    Estado civil: <b>{{ f.get_jefe_estado_civil_display }}</b><br>
 
     <h3 class="w-100">Domicilio</h3>
     Calle: <b>{{ b.inm_calle }}</b><br>
@@ -67,7 +67,7 @@
     Teléfono alternativo: <b>{{ f.jefe_contacto }}</b><br>
     Entrevista efectiva: <b>{{ b.entrevista_efectiva }}</b><br>
     Entrevistador: <b>{{ b.entrevistador_nombre_apellido }}</b><br>
-    Fecha: <b>{{ b.entrevistador_fecha }}</b><br>
+    Fecha: <b>{{ b.entrevistador_fecha|date:'d/m/Y' }}</b><br>
 
     <h2 class="w-100 text-center text-uppercase">RELEVAMIENTO SOCIAL</h2>
 
@@ -80,7 +80,7 @@
     <ul>
         <li>Apellido: <b>{{ f.nino_apellido }}</b></li>
         <li>Nombre: <b>{{ f.nino_nombre }}</b></li>
-        <li>Tipo de documento: <b>{{ f.nino_tipo_documento }}</b></li>
+        <li>Tipo de documento: <b>{{ f.get_nino_tipo_documento_display }}</b></li>
         <li>Número de documento: <b>{{ f.nino_numero_documento }}</b></li>
     </ul>
 
@@ -110,11 +110,11 @@
             <tr>
                 <td>{{ f.nombre }}</td>
                 <td>{{ f.apellido }}</td>
-                <td>{{ f.tipo_de_documento }} {{ f.numero_de_documento }}</td>
+                <td>{{ f.get_tipo_de_documento_display }} {{ f.numero_de_documento }}</td>
                 <td>{{ f.edad }}</td>
                 <td>{{ f.identidad_de_genero }}</td>
                 <td>{{ f.parentesco }}</td>
-                <td>{{ f.estado_civil }}</td>
+                <td>{{ f.get_estado_civil_display }}</td>
                 <td>{{ f.estudios_alcanzados }}</td>
                 <td>{{ f.trabajo_remunerado }}</td>
                 <td>${{ f.ingresos_por_trabajo }}</td>
