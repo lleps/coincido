@@ -401,6 +401,16 @@ class Answer(models.Model):
             return "exception"
 
 
+class DNIFotos(models.Model):
+    beneficiario = models.OneToOneField(Beneficiario, on_delete=models.CASCADE)
+
+    jefe_foto_dorso = models.ImageField(verbose_name="Jefe de familia / Foto del dorso del DNI:")
+    jefe_foto_frente = models.ImageField(verbose_name="Jefe de familia / Foto del frente del DNI:")
+
+    nino_foto_dorso = models.ImageField(verbose_name="Niño / Foto del dorso del DNI:")
+    nino_foto_frente = models.ImageField(verbose_name="Niño / Foto del frente del DNI:")
+
+
 class Profile(models.Model):
     GENDER_CHOICES = [
         ('M', 'Hombre'),

@@ -49,6 +49,7 @@ def get_first_unanswered_question_index(beneficiario, questions):
 
     return -1
 
+
 import io
 import xlsxwriter
 
@@ -66,16 +67,16 @@ def excelreport(request, user_index):
     questions = Question.objects.all()
 
     columns = ['id', 'localidad', 'entrevistador_nombre_apellido',
-             'entrevistador_fecha', 'inm_calle', 'inm_numero',
-             'inm_barrio', 'inm_localidad', 'inm_departamento',
-             'inm_lat', 'inm_lng', 'observaciones',
-             # familia
-             'cantidad_hogares', 'numero_de_hogar', 'jefe_apellido',
-             'jefe_nombre', 'jefe_tipo_documento', 'jefe_numero_documento',
-             'jefe_fecha_nacimiento', 'jefe_edad', 'jefe_telefono',
-             'jefe_contacto', 'jefe_estado_civil', 'jefe_nacionalidad',
-             'jefe_personas_en_hogar', 'nino_apellido', 'nino_nombre',
-             'nino_tipo_documento', 'nino_numero_documento']
+               'entrevistador_fecha', 'inm_calle', 'inm_numero',
+               'inm_barrio', 'inm_localidad', 'inm_departamento',
+               'inm_lat', 'inm_lng', 'observaciones',
+               # familia
+               'cantidad_hogares', 'numero_de_hogar', 'jefe_apellido',
+               'jefe_nombre', 'jefe_tipo_documento', 'jefe_numero_documento',
+               'jefe_fecha_nacimiento', 'jefe_edad', 'jefe_telefono',
+               'jefe_contacto', 'jefe_estado_civil', 'jefe_nacionalidad',
+               'jefe_personas_en_hogar', 'nino_apellido', 'nino_nombre',
+               'nino_tipo_documento', 'nino_numero_documento']
 
     for q in questions:
         columns.append(q.question_text)
@@ -304,8 +305,8 @@ class FamiliaForm(forms.ModelForm):
         self.fields["jefe_planes"].widget = forms.CheckboxSelectMultiple()
         self.fields["jefe_planes"].queryset = TipoDePlan.objects.all()
 
-        #self.fields["nino_planes"].widget = forms.CheckboxSelectMultiple()
-        #self.fields["nino_planes"].queryset = TipoDePlan.objects.all()
+        # self.fields["nino_planes"].widget = forms.CheckboxSelectMultiple()
+        # self.fields["nino_planes"].queryset = TipoDePlan.objects.all()
 
 
 def detalle_observaciones(request, pk):
@@ -617,6 +618,36 @@ def detail(request, pk, question_id):
     return render(request, 'polls/detail.html', context)
 
 
+class DNIFotosForm(forms.Form):
+    jefe_foto_dorso = forms.ImageField(label="Jefe de familia / Dorso del DNI")
+    jefe_foto_frente = forms.ImageField(label="Jefe de familia / Frente del DNI")
+    nino_foto_dorso = forms.ImageField(label="Niño / Dorso del DNI")
+    nino_foto_frente = forms.ImageField(label="Niño / Frente del DNI")
+
+
+def dnifotos(request, beneficiario_id):
+    beneficiario = get_object_or_404(Beneficiario, pk=beneficiario_id)
+    if request.method == 'POST':
+        form = DNIFotosForm(request.POST, request.FILES)
+        if form.is_valid():
+            DNIFotos.objects.filter(beneficiario_id=beneficiario.id).delete()  # delete existing in case it exists
+            data = form.cleaned_data
+            fotos = DNIFotos.objects.create(
+                beneficiario=beneficiario,
+                jefe_foto_dorso=data['jefe_foto_dorso'],
+                jefe_foto_frente=data['jefe_foto_frente'],
+                nino_foto_dorso=data['nino_foto_dorso'],
+                nino_foto_frente=data['nino_foto_frente'],
+            )
+            fotos.save()
+            return HttpResponseRedirect(reverse('polls:index'))
+
+    else:
+        form = DNIFotosForm()
+
+    return render(request, 'polls/dnifotos.html', {'pk': beneficiario.id, 'form': form})
+
+
 # endpoint to upload images to a response
 def upload_img(request, beneficiario_id, question_id):
     questions = list(Question.objects.all())
@@ -642,7 +673,6 @@ def upload_img(request, beneficiario_id, question_id):
             answer.image = form.cleaned_data['imagen']
             answer.save()
             return HttpResponseRedirect(reverse('polls:detail', args=(beneficiario_id, question_id,)))
-
 
     return HttpResponseRedirect(reverse('polls:detail', args=(beneficiario_id, question_id,)))
 
@@ -739,7 +769,6 @@ def vote(request, pk, question_id):
                     counter += 1
 
                 next_question = choice.next_question
-
 
         logger.info("Selected choice: user " + request.user.username +
                     " question " + question.question_text +

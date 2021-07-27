@@ -19,6 +19,7 @@ urlpatterns = [
     path('grupofamiliar_post_no_conv/<int:pk>/', app_views.grupofamiliar_post_no_conv, name='grupofamiliar_post_no_conv'),
     path('grupofamiliar_terminar/<int:pk>/', app_views.grupofamiliar_terminar, name='grupofamiliar_terminar'),
     path('upload_img/<int:beneficiario_id>/<int:question_id>/', app_views.upload_img, name='upload_img'),
+    path('dnifotos/<int:beneficiario_id>/', app_views.dnifotos, name='dnifotos'),
     path('<int:pk>/<int:question_id>/', app_views.detail, name='detail'),
     path('<int:pk>/<int:question_id>/results/', app_views.results, name='results'),
     path('<int:pk>/<int:question_id>/vote/', app_views.vote, name='vote'),

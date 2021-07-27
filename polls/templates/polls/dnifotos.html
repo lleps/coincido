@@ -1,0 +1,50 @@
+{% extends 'polls/base.html' %}
+
+{% block title %}Fotos del DNI{% endblock %}
+
+{% block content %}
+
+    <style>
+    input[type=text], input[type=number] {
+        display: block;
+        width: 100%;
+        height: calc(1.5em + .75rem + 2px);
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: .25rem;
+        transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    }
+    label {
+        white-space: pre-wrap;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    select, textarea {
+        width: 100%;
+    }
+
+    h3 {
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+    </style>
+
+    {% if error %}<p><strong class="text-danger">{{ error }}</strong></p>{% endif %}
+
+    <div class="container">
+        <form action="{% url 'polls:dnifotos' pk %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <h1>Subir fotos del DNI</h1>
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary btn-block m">Subir</button>
+        </form>
+    </div>
+{% endblock %}
