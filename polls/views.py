@@ -619,10 +619,10 @@ def detail(request, pk, question_id):
 
 
 class DNIFotosForm(forms.Form):
-    jefe_foto_dorso = forms.ImageField(label="Jefe de familia / Dorso del DNI")
-    jefe_foto_frente = forms.ImageField(label="Jefe de familia / Frente del DNI")
-    nino_foto_dorso = forms.ImageField(label="Niño / Dorso del DNI")
-    nino_foto_frente = forms.ImageField(label="Niño / Frente del DNI")
+    jefe_foto_dorso = forms.ImageField(label="Jefe/a de familia / Dorso del DNI")
+    jefe_foto_frente = forms.ImageField(label="Jefe/a de familia / Frente del DNI")
+    nino_foto_dorso = forms.ImageField(label="Niño/a / Dorso del DNI")
+    nino_foto_frente = forms.ImageField(label="Niño/a / Frente del DNI")
 
 
 def dnifotos(request, beneficiario_id):
@@ -643,7 +643,16 @@ def dnifotos(request, beneficiario_id):
             return HttpResponseRedirect(reverse('polls:index'))
 
     else:
-        form = DNIFotosForm()
+        try:
+            inst = DNIFotos.objects.get(beneficiario_id=beneficiario.id)
+            form = DNIFotosForm(initial={
+                'jefe_foto_dorso': inst.jefe_foto_dorso,
+                'jefe_foto_frente': inst.jefe_foto_frente,
+                'nino_foto_dorso': inst.nino_foto_dorso,
+                'nino_foto_frente': inst.nino_foto_frente,
+                })
+        except:
+            form = DNIFotosForm()
 
     return render(request, 'polls/dnifotos.html', {'pk': beneficiario.id, 'form': form})
 
