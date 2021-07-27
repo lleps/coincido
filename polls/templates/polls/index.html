@@ -57,6 +57,18 @@
                             {% endif %}
                             <br>
 
+                            <!-- Completar fotos del DNI -->
+                            {% if not match.completoDNIFotos %}
+                            <a href="dnifotos/{{ match.id }}" class="btn btn-sm btn-outline-primary mr-3">
+                                DNI del niño/a y jefe/a.
+                            </a>
+                            {% else %}
+                                <span class="text-success"><i class="fa fa-check"></i> DNI del niño/a y jefe/a. </span>
+                                <a href="dnifotos/{{ match.id }}">Editar</a>
+                            {% endif %}
+                            <br>
+
+                            <!-- Completar grupo familiar -->
                             {% if not match.completoGrupoFamiliar %}
                             <a href="grupofamiliar/{{ match.id }}" class="btn btn-sm btn-outline-primary mr-3">
                                 Relevamiento Social / Grupo familiar

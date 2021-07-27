@@ -84,6 +84,16 @@
         <li>Número de documento: <b>{{ f.nino_numero_documento }}</b></li>
     </ul>
 
+    {% if dniFotos is not None %}
+        <h3>DNI del jefe/a de familia</h3>
+            <img src="{{ dniFotos.jefe_foto_dorso.url }}" alt="" width="400px">
+            <img src="{{ dniFotos.jefe_foto_frente.url }}" alt="" width="400px">
+        <h3>DNI del niño/a</h3>
+            <img src="{{ dniFotos.nino_foto_dorso.url }}" alt="" width="400px">
+            <img src="{{ dniFotos.nino_foto_frente.url }}" alt="" width="400px">
+
+    {% endif %}
+
     <h3 class="w-100">Datos del grupo familiar conviviente</h3>
     <table class="table">
         <thead class="thead-dark">

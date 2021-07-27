@@ -128,6 +128,8 @@ def index(request):
     results = []  # lista de { beneficiarioDNI, beneficiarioNombre, beneficiarioApellido, completoEncuestaONo }
 
     for b in beneficiarios:
+
+        # ver si completo familia
         if b.familia is not None:
             familiaJefeDNI = str(b.familia.jefe_numero_documento)
             familiaJefeNombre = b.familia.jefe_nombre
@@ -136,6 +138,14 @@ def index(request):
             familiaJefeDNI = ""
             familiaJefeNombre = ""
             familiaJefeApellido = ""
+
+        # ver si completo fotos del DNI
+        try:
+            DNIFotos.objects.get(beneficiario_id=b.id)
+            completoDNIFotos = True
+        except:
+            completoDNIFotos = False
+
 
         first_unanswered_question = get_first_unanswered_question_index(b, questions)
         results.append({
@@ -149,6 +159,7 @@ def index(request):
             'completoEncuesta': first_unanswered_question == -1,
             'completoFamilia': b.familia is not None,
             'completoGrupoFamiliar': b.terminado_datos_familia,
+            'completoDNIFotos': completoDNIFotos,
             'completoObservaciones': len(b.observaciones) > 0,
             'familiaJefeDNI': familiaJefeDNI,
             'familiaJefeNombre': familiaJefeNombre,
@@ -189,16 +200,23 @@ def detalle(request, beneficiario_id):
         except Answer.DoesNotExist:
             continue
 
+    try:
+        dniFotos = DNIFotos.objects.get(beneficiario_id=beneficiario.id)
+        logger.info("dnifotos is NOT none!")
+    except (Exception) as e:
+        logger.info("exception is " + str(e))
+        dniFotos = None
+
     context = {
         'pk': beneficiario.id,
         'b': beneficiario,
         'f': beneficiario.familia,
         'qa': qa,
+        'dniFotos': dniFotos,
         'permitirGuardarDescripcion': request.user == beneficiario.usuario and len(beneficiario.observaciones) == 0,
         'convivientes': MiembroConviviente.objects.filter(beneficiario=beneficiario),
         'no_convivientes': MiembroNoConviviente.objects.filter(beneficiario=beneficiario),
     }
-    logger.info(context)
     return render(request, "polls/detalle.html", context)
 
 
