@@ -141,7 +141,7 @@ def index(request):
 
         # ver si completo fotos del DNI
         try:
-            DNIFotos.objects.get(beneficiario_id=b.id)
+            FotosDNI.objects.get(beneficiario_id=b.id)
             completoDNIFotos = True
         except:
             completoDNIFotos = False
@@ -201,7 +201,7 @@ def detalle(request, beneficiario_id):
             continue
 
     try:
-        dniFotos = DNIFotos.objects.get(beneficiario_id=beneficiario.id)
+        dniFotos = FotosDNI.objects.get(beneficiario_id=beneficiario.id)
         logger.info("dnifotos is NOT none!")
     except (Exception) as e:
         logger.info("exception is " + str(e))
@@ -648,9 +648,9 @@ def dnifotos(request, beneficiario_id):
     if request.method == 'POST':
         form = DNIFotosForm(request.POST, request.FILES)
         if form.is_valid():
-            DNIFotos.objects.filter(beneficiario_id=beneficiario.id).delete()  # delete existing in case it exists
+            FotosDNI.objects.filter(beneficiario_id=beneficiario.id).delete()  # delete existing in case it exists
             data = form.cleaned_data
-            fotos = DNIFotos.objects.create(
+            fotos = FotosDNI.objects.create(
                 beneficiario=beneficiario,
                 jefe_foto_dorso=data['jefe_foto_dorso'],
                 jefe_foto_frente=data['jefe_foto_frente'],
@@ -662,7 +662,7 @@ def dnifotos(request, beneficiario_id):
 
     else:
         try:
-            inst = DNIFotos.objects.get(beneficiario_id=beneficiario.id)
+            inst = FotosDNI.objects.get(beneficiario_id=beneficiario.id)
             form = DNIFotosForm(initial={
                 'jefe_foto_dorso': inst.jefe_foto_dorso,
                 'jefe_foto_frente': inst.jefe_foto_frente,

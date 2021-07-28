@@ -401,7 +401,7 @@ class Answer(models.Model):
             return "exception"
 
 
-class DNIFotos(models.Model):
+class FotosDNI(models.Model):
     beneficiario = models.OneToOneField(Beneficiario, on_delete=models.CASCADE)
 
     jefe_foto_dorso = models.ImageField(verbose_name="Jefe de familia / Foto del dorso del DNI:")
