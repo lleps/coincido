@@ -122,7 +122,8 @@ class BeneficiarioFamilia(models.Model):
     jefe_estudios_alcanzados = models.CharField(verbose_name="Estudios alcanzados", max_length=50)
     jefe_trabajo_remunerado = models.CharField(max_length=80, choices=TRABAJO_REMUNERADO_CHOICES, verbose_name="Trabajo remunerado")
     jefe_ingresos_por_trabajo = models.IntegerField(verbose_name="Ingresos por trabajo")
-    jefe_planes = models.ManyToManyField(TipoDePlan, verbose_name="Otros ingresos")
+    jefe_planes = models.ManyToManyField(TipoDePlan, verbose_name="Planes sociales")
+    jefe_otros_ingresos = models.CharField(max_length=200, verbose_name="Otros ingresos", blank=True, default="")
     jefe_cobertura_de_salud = models.CharField(max_length=80, choices=COBERTURA_DE_SALUD_CHOICES, verbose_name="Cobertura de salud")
     jefe_discapacidad = models.CharField(max_length=80, choices=DISCAPACIDAD_CHOICES, verbose_name="Discapacidad")
     jefe_certificado_de_discapacidad = models.CharField(max_length=80, choices=CERTIFICADO_DE_DISCAPACIDAD_CHOICES,
@@ -137,6 +138,7 @@ class BeneficiarioFamilia(models.Model):
     nino_numero_documento = models.IntegerField(verbose_name="Número de documento")
     nino_fecha_nacimiento = models.DateField(verbose_name="Fecha de nacimiento")
     nino_edad = models.IntegerField(verbose_name="Edad")
+    nino_otros_ingresos = models.CharField(max_length=200, verbose_name="Otros ingresos", blank=True, default="")
     nino_identidad_de_genero = models.CharField(max_length=80, verbose_name="Identidad de género",
                                                 choices=IDENTIDAD_DE_GENERO_CHOICES)
     nino_educacion = models.CharField(max_length=120, verbose_name="Educación")
@@ -277,7 +279,8 @@ class MiembroConviviente(models.Model):
     estudios_alcanzados = models.CharField(verbose_name="Estudios alcanzados", max_length=50)
     trabajo_remunerado = models.CharField(max_length=80, choices=TRABAJO_REMUNERADO_CHOICES)
     ingresos_por_trabajo = models.IntegerField()
-    planes = models.ManyToManyField(TipoDePlan, verbose_name="Otros ingresos")
+    planes = models.ManyToManyField(TipoDePlan, verbose_name="Planes sociales")
+    otros_ingresos = models.CharField(max_length=200, verbose_name="Otros ingresos", default="")
     cobertura_de_salud = models.CharField(max_length=80, choices=COBERTURA_DE_SALUD_CHOICES)
     discapacidad = models.CharField(max_length=80, choices=DISCAPACIDAD_CHOICES)
     certificado_de_discapacidad = models.CharField(max_length=80, choices=CERTIFICADO_DE_DISCAPACIDAD_CHOICES, default="No")

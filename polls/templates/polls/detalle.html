@@ -108,6 +108,7 @@
             <th scope="col">Estudios alcanzados</th>
             <th scope="col">Trabajo remunerado</th>
             <th scope="col">Ingresos por trabajo</th>
+            <th scope="col">Planes sociales</th>
             <th scope="col">Otros ingresos</th>
             <th scope="col">Cobertura de salud</th>
             <th scope="col">Discapacidad</th>
@@ -133,6 +134,7 @@
                         {{ p.nombre }},
                     {% endfor %}
                 </td>
+                <td>{{ f.otros_ingresos }}</td>
                 <td>{{ f.cobertura_de_salud }}</td>
                 <td>{{ f.discapacidad }} ({{ f.certificado_de_discapacidad }})</td>
                 <td>{{ f.enfermedad_cronica }}</td>
