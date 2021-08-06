@@ -25,16 +25,19 @@
 
 <div class="">
 
-{% if not permitirGuardarDescripcion %}
     <button class="btn-block w-100 btn btn-warning" onclick="
     console.log(this);
     this.style.setProperty('visibility', 'hidden');
-    setTimeout(() => this.style.setProperty('visibility', 'visible'), 2000)
+    let botonsave = document.getElementById('botonsave');
+    botonsave.style.setProperty('visibility', 'hidden');
+    setTimeout(() => {
+        this.style.setProperty('visibility', 'visible');
+        if (botonsave) botonsave.style.setProperty('visibility', 'visible');
+    }, 2000);
     this.visibility='hidden';
     window.print();
     return false;
     "><i class="fa fa-print"></i> Imprimir</button>
-{% endif %}
 
 <img src="/static/polls/header.png" style="width: 100%;
     transform: scale(0.5);
@@ -202,17 +205,21 @@
             {% csrf_token %}
             <textarea rows="10" class="w-100" required name="observaciones">{{ b.observaciones }}</textarea>
             <br><br>
-            <button type="submit" class="btn btn-danger btn-block py-3"><i class="fa fa-save"></i> Guardar y finalizar observación</button>
+            <button type="submit" id="botonsave" class="btn btn-danger btn-block py-3"><i class="fa fa-save"></i> Guardar y finalizar observación</button>
         </form>
+        <div class="row">
+            <div class="col-4">FIRMA DEL TRABAJADOR SOCIAL</div>
+            <div class="col-4">SELLO</div>
+            <div class="col-4">DNI</div>
+        </div>
     {% else %}
-        <textarea rows="10" class="w-100" disabled>{{ b.observaciones }}</textarea>
+        <textarea rows="10" class="w-100">{{ b.observaciones }}</textarea>
         <div class="row">
             <div class="col-4">FIRMA DEL TRABAJADOR SOCIAL</div>
             <div class="col-4">SELLO</div>
             <div class="col-4">DNI</div>
         </div>
     {% endif %}
-
 
 
 </div>

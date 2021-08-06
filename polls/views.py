@@ -240,7 +240,7 @@ def detalle(request, beneficiario_id):
         'f': beneficiario.familia,
         'qa': qa,
         'dniFotos': dniFotos,
-        'permitirGuardarDescripcion': request.user == beneficiario.usuario and len(beneficiario.observaciones) == 0,
+        'permitirGuardarDescripcion': request.user == beneficiario.usuario,
         'convivientes': MiembroConviviente.objects.filter(beneficiario=beneficiario),
         'no_convivientes': MiembroNoConviviente.objects.filter(beneficiario=beneficiario),
     }
