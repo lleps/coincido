@@ -75,8 +75,22 @@ def excelreport(request, user_index):
                'jefe_nombre', 'jefe_tipo_documento', 'jefe_numero_documento',
                'jefe_fecha_nacimiento', 'jefe_edad', 'jefe_telefono',
                'jefe_contacto', 'jefe_estado_civil', 'jefe_nacionalidad',
-               'jefe_personas_en_hogar', 'nino_apellido', 'nino_nombre',
-               'nino_tipo_documento', 'nino_numero_documento']
+               'jefe_personas_en_hogar',
+               # nuevos
+               'jefe_identidad_de_genero', 'jefe_estudios_alcanzados',
+               'jefe_trabajo_remunerado', 'jefe_ingresos_por_trabajo',
+               'jefe_otros_ingresos', 'jefe_cobertura_de_salud', 'jefe_discapacidad',
+               'jefe_certificado_de_discapacidad', 'jefe_enfermedad_cronica',
+               'jefe_embarazo_en_curso',
+               # niño
+               'nino_apellido', 'nino_nombre',
+               'nino_tipo_documento', 'nino_numero_documento',
+               # nuevos
+               'nino_fecha_nacimiento', 'nino_edad', 'nino_otros_ingresos',
+               'nino_identidad_de_genero', 'nino_educacion', 'nino_parentesco',
+               'nino_cobertura_de_salud', 'nino_discapacidad', 'nino_certificado_de_discapacidad',
+               'nino_enfermedad_cronica'
+               ]
 
     for q in questions:
         columns.append(q.question_text)
@@ -99,8 +113,21 @@ def excelreport(request, user_index):
                  f.jefe_nombre, f.jefe_tipo_documento, f.jefe_numero_documento,
                  f.jefe_fecha_nacimiento, f.jefe_edad, f.jefe_telefono,
                  f.jefe_contacto, f.jefe_estado_civil, f.jefe_nacionalidad,
-                 f.jefe_personas_en_hogar, f.nino_apellido, f.nino_nombre,
-                 f.nino_tipo_documento, f.nino_numero_documento]
+                 f.jefe_personas_en_hogar,
+                 # nuevos
+                 f.jefe_identidad_de_genero, f.jefe_estudios_alcanzados,
+                 f.jefe_trabajo_remunerado, f.jefe_ingresos_por_trabajo,
+                 f.jefe_otros_ingresos, f.jefe_cobertura_de_salud, f.jefe_discapacidad,
+                 f.jefe_certificado_de_discapacidad, f.jefe_enfermedad_cronica,
+                 f.jefe_embarazo_en_curso,
+                 # nino
+                 f.nino_apellido, f.nino_nombre,
+                 f.nino_tipo_documento, f.nino_numero_documento,
+                 # nuevos
+                 f.nino_fecha_nacimiento, f.nino_edad, f.nino_otros_ingresos,
+                 f.nino_identidad_de_genero, f.nino_educacion, f.nino_parentesco,
+                 f.nino_cobertura_de_salud, f.nino_discapacidad, f.nino_certificado_de_discapacidad,
+                 f.nino_enfermedad_cronica]
 
         # Rellenar todas las preguntas. Y respuestas.
         for q in questions:
